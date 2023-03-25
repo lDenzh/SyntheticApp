@@ -4,6 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+.input-container #inputfield {
+  min-height: 780px;
+  min-width: 350px;
+}
 
 .logo {
   height: 6em;
