@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  backend:
+    build: ./sanic-backend
+    container_name: sanic
+    ports:
+      - 8000:8000
+    networks:
+      - network
+
+  frontend:
+    build: ./testsuite
+    container_name: reactapp
+    ports:
+      - 5173:5173
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge

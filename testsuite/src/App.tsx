@@ -12,11 +12,11 @@ const App = () => {
     const [file, setFile] = useState();
     const inputRef = useRef();
 
-    const handleDrag = (event) => {
+    const handleDrag = (event: React.DragEvent) => {
         event.preventDefault();
     };
 
-    const handleDrop = (event) => {
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         setFile(event.dataTransfer.files)
     };
@@ -57,7 +57,7 @@ const App = () => {
     const [gt, setGt] = useState('')
     const [updated, setUpdated] = useState(gt)
     
-    const handleChange = (event) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGt(event.target.value)
     }
 
