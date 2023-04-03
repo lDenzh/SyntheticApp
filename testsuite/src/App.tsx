@@ -47,6 +47,7 @@ const App = () => {
               
         })
         console.log(data);
+        // muligens gjøre setFile = data; for å vise resultatet.
     }
 
     const handleUpload = () => {
