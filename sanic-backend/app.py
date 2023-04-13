@@ -52,8 +52,7 @@ def post_runSynth(request):
         pdf_path.write_bytes(b64decode(json_data["PDF"].encode('utf-8')))
         gt_path.write_text(json.dumps(json_data["GT"]))
      
-        #pdf_path = Path('/Users/oscarnordhuus/Documents/Utdanning/Bachelor/SynthApp/sanic-backend/pdf/tempPdf.pdf')
-        #gt_path = Path('/Users/oscarnordhuus/Documents/Utdanning/Bachelor/SynthApp/sanic-backend/gt.json')
+
         dest_dir = Path(destdir)
         temp_dir = Path(f'{destdir}/tmpdirFlattened')
 
