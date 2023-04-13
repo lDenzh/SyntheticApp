@@ -4,9 +4,15 @@
   padding: 2rem;
   text-align: center;
 }
-.input-container #inputfield {
-  min-height: 780px;
-  min-width: 350px;
+.input-container {
+  height: 700px;
+}
+
+#inputfield {
+  width: 100%;
+  height: 100%;
+  color: black;
+  background-color: white;
 }
 
 .logo {
