@@ -1,6 +1,6 @@
 from sanic import Sanic
 from sanic.response import json as sanic_json, text 
-from sanic import text #vet ikke om trenger?
+from sanic import text
 from sanic_ext import Extend, cors
 from sanic_cors.extension import CORS
 
@@ -11,7 +11,7 @@ from pathlib import Path
 from base64 import b64decode, b64encode
 from synthetic.pdf.parser import parse_pdf
 from synthetic.pdf.synthesizer import BasicSynthesizer
-import os
+
 
 
 app = Sanic(__name__)   
@@ -43,7 +43,7 @@ def post_runSynth(request):
     # import pdb; pdb.set_trace()
     with tempfile.TemporaryDirectory(prefix='TemporaryDirectory_') as destdir:
         print(destdir)
-        json_data = json.loads(request.json)
+        json_data = request.json
         ##import pdb; pdb.set_trace()
         pdf_path = Path(f'{destdir}/dataPDF.pdf')
         gt_path = Path(f'{destdir}/dataGT.json')
