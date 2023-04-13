@@ -48,43 +48,32 @@ def post_runSynth(request):
         pdf_path = Path(f'{destdir}/dataPDF.pdf')
         gt_path = Path(f'{destdir}/dataGT.json')
 
-
         pdf_path.write_bytes(b64decode(json_data["PDF"].encode('utf-8')))
         gt_path.write_text(json.dumps(json_data["GT"]))
      
-
         dest_dir = Path(destdir)
         temp_dir = Path(f'{destdir}/tmpdirFlattened')
-
-
-        
         
         status = synthesize_document(pdf_path,gt_path,dest_dir,temp_dir)
-        print(status)
-        #Code that returns a single pdf from tmpdir
-        
         
         pdf_collection = list(dest_dir.glob('**/*.pdf'))
         gt_collection = list(dest_dir.glob('**/*.json'))
-        
-        
-     
         
         json_statment = {
             "PDF" : {},
             "GT" : {}
         }
+
+        #adds the pdfs and gts to the json
         for pdf in pdf_collection:
             encoded_pdf = b64encode(pdf.read_bytes())
             raw_pdf = encoded_pdf.decode('utf-8')
             json_statment["PDF"][pdf.name] = raw_pdf
-
-        del json_statment["PDF"]["dataPDF.pdf"]
+        #del json_statment["PDF"]["dataPDF.pdf"]
 
         for gt in gt_collection:
             json_statment["GT"][gt.name] = gt.read_text()
-
-        del json_statment["GT"]["dataGT.json"]
+        #del json_statment["GT"]["dataGT.json"]
 
         return_statement = json.dumps(json_statment)
 
