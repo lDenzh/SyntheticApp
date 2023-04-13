@@ -4,3 +4,5 @@ __pycache__
 main.py
 test.py
 gt.json
+sanic-backend/pdf/
+.gitignore
