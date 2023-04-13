@@ -12,13 +12,13 @@ const App = () => {
     const [file, setFile] = useState();
     const inputRef = useRef();
 
-    const handleDrag = (event: React.DragEvent) => {
-        event.preventDefault();
+    const handleDrag = (e: React.DragEvent) => {
+        e.preventDefault();
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        setFile(event.dataTransfer.files)
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setFile(e.dataTransfer.files)
     };
 
     
@@ -58,8 +58,8 @@ const App = () => {
     const [gt, setGt] = useState('')
     const [updated, setUpdated] = useState(gt)
     
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setGt(event.target.value)
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setGt(e.target.value)
     }
 
     const handleGT = () => {
@@ -103,6 +103,19 @@ const App = () => {
                     ref={gtRef}
                     type="text"
                     onChange={handleChange}
+                    placeholder='    {
+                      "label": "Navn",
+                      "value": "Navn Navnesen"
+                  },
+                  {
+                      "label": "Totalsum",
+                      "value": "528.00 kr"
+                  },
+                  {
+                      "label": "Telefon",
+                      "value": "+4794721323"
+                  }
+              '
                     
                 />
             </div>
