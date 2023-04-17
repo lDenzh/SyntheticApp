@@ -4,8 +4,11 @@ import FileUpload from './App'
 import App from './App'
 import './index.css'
 
+import PDFevaluate from './PDFevaluate'
+import Layout from './Layout'
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+      <App/>
   </React.StrictMode>,
 )

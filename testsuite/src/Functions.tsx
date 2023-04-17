@@ -7,6 +7,7 @@ import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import eksempelpdf from "./pdf.pdf";
+import PDFevaluate from "./PDFevaluate";
 
 const Functions = () => {
     const [file, setFile] = useState();
@@ -47,6 +48,20 @@ const Functions = () => {
               
         })
         console.log(data);
+        let synthDocs = JSON.parse(data.message);
+        console.log(synthDocs)
+        
+        
+        const docs = Object.values(synthDocs);
+        console.log(docs);
+        
+        docs.forEach(element => {
+          console.log(element);
+
+          return(
+            <PDFevaluate/>
+          )
+        });
         // muligens gjøre setFile = data; for å vise resultatet.
     }
 
