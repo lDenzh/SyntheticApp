@@ -1,0 +1,22 @@
+.dropzone {
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    border-style:dashed;
+    border-color: grey;
+    justify-content: center;
+    padding: 2%;
+    
+    
+}
+.dropzone Button {
+    margin-top: 5%;
+
+   
+}
+
+.btnprevnext {
+    display: flex;
+    column-gap: 12px;
+    justify-content:center;
+}
