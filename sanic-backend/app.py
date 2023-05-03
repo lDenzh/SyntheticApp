@@ -42,8 +42,8 @@ async def post_json(request):
 def post_runSynth(request):
     # import pdb; pdb.set_trace()
     with tempfile.TemporaryDirectory(prefix='TemporaryDirectory_') as destdir:
-        print(destdir)
-        json_data = json.loads(request.json)
+
+        json_data = request.json
         ##import pdb; pdb.set_trace()
         pdf_path = Path(f'{destdir}/dataPDF.pdf')
         gt_path = Path(f'{destdir}/dataGT.json')
