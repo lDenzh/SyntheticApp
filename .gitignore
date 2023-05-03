@@ -1,2 +1,12 @@
+.gitignore
+.DS_Store
+/sanic-backend/.DS_Store
 testsuite/src/280721.pdf
 testsuite/src/assets/IkeaInvoice.pdf
+/sanic-backend/synth_env/ 
+/sanic-backend/dest_dir/
+/sanic-backend/pdf/
+/sanic-backend/__pycache__/
+/sanic-backend/main.py 
+/sanic-backend/gt.json
+/sanic-backend/test.py
