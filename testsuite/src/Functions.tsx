@@ -65,8 +65,6 @@ const Functions = () => {
         Postman();
     }
 
-  
-
     const gtRef = useRef(null);
     const [gt, setGt] = useState('')
     const [updated, setUpdated] = useState(gt)
