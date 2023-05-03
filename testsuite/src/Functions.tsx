@@ -40,6 +40,7 @@ const Functions = () => {
             PDF: word,
             GT: updated
         };
+        console.log(payload);
 
         const { data } = await axios.post("http://localhost:8000/runSynth", payload, {  //
             headers: {
