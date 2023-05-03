@@ -2,11 +2,14 @@ import React, {useRef, useState} from "react";
 import axios, {isAxiosError} from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
+import "./Functions.css";
 
 import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import eksempelpdf from "./pdf.pdf";
+import PDFevaluate from "./PDFevaluate";
+
+
 
 const Functions = () => {
     const [file, setFile] = useState();
@@ -20,8 +23,7 @@ const Functions = () => {
         e.preventDefault();
         setFile(e.dataTransfer.files)
     };
-
-    
+  
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file[0]);
@@ -39,7 +41,7 @@ const Functions = () => {
             GT: updated
         };
 
-        const { data } = await axios.post("http://localhost:8000/runSynth", payload, {
+        const { data } = await axios.post("http://localhost:8000/runSynth", payload, {  //
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json'
@@ -47,12 +49,23 @@ const Functions = () => {
               
         })
         console.log(data);
+        if (data) return (<PDFevaluate/>)
+        let synthDocs = JSON.parse(data.message);
+        console.log(synthDocs)
+        
+        
+        const docs = Object.values(synthDocs);
+        console.log(docs);
+        
+      
         // muligens gjøre setFile = data; for å vise resultatet.
     }
 
     const handleUpload = () => {
         Postman();
     }
+
+  
 
     const gtRef = useRef(null);
     const [gt, setGt] = useState('')
@@ -88,6 +101,8 @@ const Functions = () => {
     function nextPage() {
       changePage(1);
     }
+
+    
 
     if (file) return (
       
@@ -133,20 +148,22 @@ const Functions = () => {
       <p>
         Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
       </p>
-      <Button
-        type="Button"
-        disabled={pageNumber <= 1}
-        onClick={previousPage}
-      >
-        Previous
-      </Button>
-      <Button
-        type="Button"
-        disabled={pageNumber >= numPages}
-        onClick={nextPage}
-      >
-        Next
-      </Button>
+      <div className="btnprevnext">
+        <Button
+          type="Button"
+          disabled={pageNumber <= 1}
+          onClick={previousPage}
+        >
+          Previous
+        </Button>
+        <Button
+          type="Button"
+          disabled={pageNumber >= numPages}
+          onClick={nextPage}
+        >
+          Next
+        </Button>
+      </div>
     </div>
       </div>
     </div>
@@ -160,8 +177,7 @@ const Functions = () => {
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
             >
-                <h1>Drag and drop PDF to upload</h1>
-                <h1>or select PDF from file explorer</h1>
+                <h1>Drag and drop or select from file explorer to upload</h1>
                 <input
                     type = 'file'
                     accept= 'application/pdf'
