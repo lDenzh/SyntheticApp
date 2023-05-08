@@ -10,7 +10,7 @@ import eksempelpdf from "./pdf.pdf";
 import PDFevaluate from "./PDFevaluate";
 
 const Functions = () => {
-    const [file, setFile] = useState();
+    const [file, setFile] = useState<any | null>();
     const inputRef = useRef();
 
     const handleDrag = (e: React.DragEvent) => {
