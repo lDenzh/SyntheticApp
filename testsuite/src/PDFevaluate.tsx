@@ -43,18 +43,19 @@ return (
 
       </div>
       
-      <div className='col-4'>
+      <div className='col-8'>
         <div className='pdfview'>
-          <Button className="rounded-circle" color="danger">X</Button>
             <Document file={mypdf} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
             </Document>
-          <Button className="rounded-circle" color="success">V</Button>
+          <div className='YayNay'>
+            <Button className="rounded-circle" color="danger">Decline</Button>
+            <Button className="rounded-circle" color="success">Accept</Button>
+          </div>
         </div>
           <p>
             Page {pageNumber} of {numPages}
           </p>
-          
         </div>
       </div>
     </div>

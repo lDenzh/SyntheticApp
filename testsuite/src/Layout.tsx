@@ -5,7 +5,6 @@ import Navigation from './Navigation'
   return (
     <div className={props.class}>
         <Navigation/>
-        <hr/>
         {props.children}
         <hr/>
         <p>© 2023 Robocar. No rights reserved</p>

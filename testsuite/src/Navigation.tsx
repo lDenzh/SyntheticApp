@@ -11,13 +11,17 @@ import {
     NavLink,
   } from 'reactstrap';
 
-
 const Navigation = () => {
     const [collapsed, setCollapsed] = useState(true);
     const toggleNavbar = () => setCollapsed(!collapsed);
 
+    const navbarStyle = {
+      width: '80vw',
+
+    }
+
   return (
-    <div>
+    <div style={navbarStyle}>
       <Navbar color="faded" light>
         <NavbarBrand href="/" className="me-auto">
           Document Synthesizer
@@ -29,6 +33,9 @@ const Navigation = () => {
               <NavLink href="/components/">Documents</NavLink>
             </NavItem>
             <NavItem>
+              <NavLink href="https://www.cradl.ai/use-cases/invoice-ocr-api">Cradl.ai</NavLink>
+            </NavItem>
+            <NavItem>
               <NavLink href="https://github.com/reactstrap/reactstrap">
                 GitHub
               </NavLink>
@@ -36,6 +43,7 @@ const Navigation = () => {
           </Nav>
         </Collapse>
       </Navbar>
+      <hr/>
     </div>
   );
 }
