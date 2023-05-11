@@ -7,4 +7,4 @@ Requirments for this to how to work:
 
 
 Clone repo via git:
-pip install "git+https://github.com/lDenzh/React-TS.git"
+$pip install "git+https://github.com/lDenzh/React-TS.git"
