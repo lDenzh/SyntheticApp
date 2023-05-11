@@ -8,17 +8,22 @@ import { useState } from 'react'
 function App(props:any) {
 
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [retrievedJSON, setRetrievedJSON] = useState(false);
   const handleDisplayChange = (value) => {
     setUploadSuccess(value);
+  };
+
+  const handleRetrievedJSON  = (value) => {
+    setRetrievedJSON(value);
   };
   
 
   return (
     <Layout>
       {uploadSuccess ? (
-        <PDFevaluate onDisplayChange={handleDisplayChange} />
+        <PDFevaluate fileProp={retrievedJSON} onDisplayChange={handleDisplayChange}/>
       ) : (
-        <Functions onDisplayChange={handleDisplayChange} />
+        <Functions onUploadChange={handleRetrievedJSON} onDisplayChange={handleDisplayChange} />
       )}
     </Layout>
   )
