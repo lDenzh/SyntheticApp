@@ -3,3 +3,4 @@ sanic-ext>=22.12.0
 lucidtech-synthetic
 ghostscript
 psycopg2
+sanic-cors
