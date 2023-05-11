@@ -1,7 +1,7 @@
 import React from 'react'
 import Navigation from './Navigation'
 
- function Layout(props) {
+ function Layout(props:any) {
   return (
     <div className={props.class}>
         <Navigation/>
