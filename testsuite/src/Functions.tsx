@@ -1,4 +1,5 @@
 import React, {useRef, useState} from "react";
+import {uploadSuccess, setUploadSuccess} from "./App";
 import axios, {isAxiosError} from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
@@ -11,7 +12,7 @@ import PDFevaluate from "./PDFevaluate";
 
 
 
-const Functions = () => {
+const Functions = (props) => {
     const [file, setFile] = useState<any | null>();
     const inputRef = useRef();
 
@@ -50,7 +51,6 @@ const Functions = () => {
               
         })
         console.log(data);
-        if (data) return (<PDFevaluate/>)
         let synthDocs = JSON.parse(data.message);
         console.log(synthDocs)
         
@@ -58,12 +58,13 @@ const Functions = () => {
         const docs = Object.values(synthDocs);
         console.log(docs);
         
-      
+        
         // muligens gjøre setFile = data; for å vise resultatet.
     }
 
     const handleUpload = () => {
         Postman();
+        props.onDisplayChange(true);
     }
 
     const gtRef = useRef(null);

@@ -30,7 +30,7 @@ return (
     <div className='row justify-content-center'>
       <div className='col-4'>
         <h5>Ground Truth JSON</h5>
-        <p><pre>{sampleGT}</pre></p>
+        <pre>{sampleGT}</pre>
       </div>
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
       <div className='col-6'>
