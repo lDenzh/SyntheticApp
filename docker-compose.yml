@@ -5,7 +5,7 @@ services:
     build: ./sanic-backend
     container_name: sanic
     ports:
-      - 8000:8000
+      - "8000:8000"
     networks:
       - network
 
@@ -13,10 +13,23 @@ services:
     build: ./testsuite
     container_name: reactapp
     ports:
-      - 5173:5173
+      - "5173:5173"
     networks:
       - network
+  
+  database:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
 
+    environment:
+      POSTGRES_USER: postgres_usr
+      POSTGRES_PASSWORD: postgres_pwd
+      POSTGRES_DB: storage_db
+    
+    networks:
+      - network
+      
 networks:
   network:
     driver: bridge

@@ -2,3 +2,4 @@ sanic>=22.12.0
 sanic-ext>=22.12.0
 lucidtech-synthetic
 ghostscript
+psycopg2
