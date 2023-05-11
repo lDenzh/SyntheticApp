@@ -2,14 +2,24 @@ import './App.css'
 import Layout from './Layout'
 import Functions from './Functions'
 import PDFevaluate from './PDFevaluate'
+import { useState } from 'react'
 
 
-function App() {
+function App(props:any) {
+
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const handleDisplayChange = (value) => {
+    setUploadSuccess(value);
+  };
   
-//Functions/ skal være inni Layout muligens få med props fra children for å evaluere hva som vises
+
   return (
     <Layout>
-      <Functions/>
+      {uploadSuccess ? (
+        <PDFevaluate onDisplayChange={handleDisplayChange} />
+      ) : (
+        <Functions onDisplayChange={handleDisplayChange} />
+      )}
     </Layout>
   )
 }
