@@ -10,7 +10,7 @@ services:
       - network
 
   frontend:
-    build: ./testsuite
+    build: ./vite-react-frontend
     container_name: reactapp
     ports:
       - "5173:5173"
