@@ -1,8 +1,15 @@
+body {
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+
+
+}
+
 #root {
      /*1280px*/
     margin: 0 auto;
     padding: 0rem;
     text-align: center;
+
   }
 
 
@@ -12,18 +19,30 @@
 .pdfview {
     display: inline-block;
     padding: 1%;
-    background-color:black;
 }
 
-.YayNay {
+.col-1 {
     display: flex;
     justify-content: center;
+    align-items: center;
+    margin: 0 -40px 0;
 
+}
+.col-4 {
+    margin-top: 25px;
+    text-align: left;
 }
 
 .rounded-circle {
-    margin: 0 20px;
+    height: 60px;
+    width: 60px;
+    font-size: 30px;
 }
+.heading {
+    text-align: left;
+}
+
+
 .gt {
     display: inline-block;
     align-items: center;

@@ -36,7 +36,7 @@ const Navigation = () => {
               <NavLink href="https://www.cradl.ai/use-cases/invoice-ocr-api">Cradl.ai</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">
+              <NavLink href="https://github.com/LucidtechAI/synthetic">
                 GitHub
               </NavLink>
             </NavItem>
