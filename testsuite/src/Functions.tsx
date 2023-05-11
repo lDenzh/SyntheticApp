@@ -39,7 +39,7 @@ const Functions = (props) => {
 
         const payload = {
             PDF: word,
-            GT: updated //evt fjern JSON.parse om det gir problemer
+            GT: updated 
         };
         console.log(payload);
 
@@ -50,16 +50,9 @@ const Functions = (props) => {
               },
               
         })
+        
         console.log(data);
-        let synthDocs = JSON.parse(data.message);
-        console.log(synthDocs)
-        
-        
-        const docs = Object.values(synthDocs);
-        console.log(docs);
-        
-        
-        // muligens gjøre setFile = data; for å vise resultatet.
+       
     }
 
     const handleUpload = () => {

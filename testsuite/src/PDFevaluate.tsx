@@ -12,8 +12,7 @@ import { Button } from 'reactstrap';
 
 
 
-const PDFevaluate = () => {
-
+const PDFevaluate = (props: any) => {
 
 const [numPages, setNumPages] = useState(null);
 const [pageNumber, setPageNumber] = useState(1);
@@ -35,7 +34,7 @@ return (
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
       <div className='col-6'>
         <div className='pdfview'>
-            <Document file={mypdf} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document file={decodedPDF} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
             </Document>
         </div>
