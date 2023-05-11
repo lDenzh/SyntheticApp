@@ -22,13 +22,14 @@ function onDocumentLoadSuccess({ numPages }) {
   setNumPages(numPages);
 }
 
-let sampleGT:string = '[\n  {\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  },\n  {\n   "label": "Totalsum",\n   "value": "528.00 kr"\n  },\n  {\n   "label": "Telefon",\n   "value": "+4794721323"\n  }\n]';
+let sampleGT:string = '[{\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  },\n  {\n   "label": "Totalsum",\n   "value": "528.00 kr"\n  },\n  {\n   "label": "Telefon",\n   "value": "+4794721323"\n  }\n]';
 
 return (
 <div className='container'>
-  <div className='heading'><h4>Verify the synthesized documents <span id='1'>(1/10)</span></h4></div>
+  <div className='heading'><h4>Verify the synthesized documents <span id='1'>(1/10)</span></h4></div> 
     <div className='row justify-content-center'>
       <div className='col-4'>
+        <h5>Ground Truth JSON</h5>
         <p><pre>{sampleGT}</pre></p>
       </div>
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>

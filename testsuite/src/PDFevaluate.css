@@ -29,7 +29,7 @@ body {
 
 }
 .col-4 {
-    margin-top: 25px;
+    margin-top: 10px;
     text-align: left;
 }
 
@@ -38,6 +38,13 @@ body {
     width: 60px;
     font-size: 30px;
 }
+
+.rounded-circle:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
+
 .heading {
     text-align: left;
 }

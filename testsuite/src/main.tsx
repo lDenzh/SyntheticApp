@@ -9,6 +9,6 @@ import Layout from './Layout'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-      <PDFevaluate/>
+      <App/>
   </React.StrictMode>,
 )

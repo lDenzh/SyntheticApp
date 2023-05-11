@@ -38,7 +38,7 @@ const Functions = () => {
 
         const payload = {
             PDF: word,
-            GT: updated
+            GT: JSON.parse(updated)
         };
         console.log(payload);
 

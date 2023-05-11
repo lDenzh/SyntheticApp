@@ -6,10 +6,10 @@ import PDFevaluate from './PDFevaluate'
 
 function App() {
   
-//Functions/ skal være inni Layout
+//Functions/ skal være inni Layout muligens få med props fra children for å evaluere hva som vises
   return (
     <Layout>
-      <PDFevaluate/> 
+      <Functions/>
     </Layout>
   )
 }
