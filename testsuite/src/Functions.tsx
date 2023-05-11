@@ -39,7 +39,7 @@ const Functions = (props) => {
 
         const payload = {
             PDF: word,
-            GT: JSON.parse(updated) //evt fjern JSON.parse om det gir problemer
+            GT: updated //evt fjern JSON.parse om det gir problemer
         };
         console.log(payload);
 
