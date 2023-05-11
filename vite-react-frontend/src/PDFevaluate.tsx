@@ -17,6 +17,16 @@ const PDFevaluate = (props: any) => {
 const [numPages, setNumPages] = useState(null);
 const [pageNumber, setPageNumber] = useState(1);
 
+function getDocuments() {
+  var count = 0;
+  while (count < 10) {
+    
+  }
+  return [
+    { id: 1, name: 'SampleInvoice.pdf', url: mypdf },
+  ];
+}
+
 function onDocumentLoadSuccess({ numPages }) {
   setNumPages(numPages);
 }
@@ -34,7 +44,7 @@ return (
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
       <div className='col-6'>
         <div className='pdfview'>
-            <Document file={decodedPDF} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
             </Document>
         </div>
