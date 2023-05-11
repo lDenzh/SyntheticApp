@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import mypdf from './280721.pdf'
+import mypdf from './assets/SampleInvoice.pdf'
 import './PDFevaluate.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,41 +22,27 @@ function onDocumentLoadSuccess({ numPages }) {
   setNumPages(numPages);
 }
 
+let sampleGT:string = '[\n  {\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  },\n  {\n   "label": "Totalsum",\n   "value": "528.00 kr"\n  },\n  {\n   "label": "Telefon",\n   "value": "+4794721323"\n  }\n]';
 
 return (
 <div className='container'>
-    <div className='row justify-content center'>
+  <div className='heading'><h4>Verify the synthesized documents <span id='1'>(1/10)</span></h4></div>
+    <div className='row justify-content-center'>
       <div className='col-4'>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-        <p>a ground truth or something</p>
-
+        <p><pre>{sampleGT}</pre></p>
       </div>
-      
-      <div className='col-8'>
+      <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
+      <div className='col-6'>
         <div className='pdfview'>
             <Document file={mypdf} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
             </Document>
-          <div className='YayNay'>
-            <Button className="rounded-circle" color="danger">Decline</Button>
-            <Button className="rounded-circle" color="success">Accept</Button>
-          </div>
         </div>
           <p>
             Page {pageNumber} of {numPages}
           </p>
         </div>
+        <div className='col-1'><Button className="rounded-circle" color="success" outline>&#10003;</Button></div>
       </div>
     </div>
 );

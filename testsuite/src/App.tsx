@@ -8,7 +8,6 @@ function App() {
   
 //Functions/ skal være inni Layout
   return (
-    
     <Layout>
       <PDFevaluate/> 
     </Layout>
