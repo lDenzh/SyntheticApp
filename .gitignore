@@ -12,5 +12,6 @@ testsuite/src/assets/IkeaInvoice.pdf
 /sanic-backend/test.py
 /sanic-backend/gt_ IKEA.json
 sanic-backend/gt_IKEA.json
+node_modules
 
 
