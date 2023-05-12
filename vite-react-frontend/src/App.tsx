@@ -9,11 +9,11 @@ function App(props:any) {
 
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [retrievedJSON, setRetrievedJSON] = useState(false);
-  const handleDisplayChange = (value) => {
+  const handleDisplayChange = (value:any) => {
     setUploadSuccess(value);
   };
 
-  const handleRetrievedJSON  = (value) => {
+  const handleRetrievedJSON  = (value:any) => {
     setRetrievedJSON(value);
   };
   
