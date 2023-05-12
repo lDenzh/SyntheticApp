@@ -3,6 +3,17 @@ body {
 
 }
 
+.input-container {
+    height: 650px;
+}
+  
+#inputfield {
+    width: 100%;
+    height: 95%;
+    color: black;
+    background-color: white;
+}  
+
 .dropzone {
     display: flex;
     flex-direction: column;
@@ -11,13 +22,13 @@ body {
     border-color: grey;
     justify-content: center;
     padding: 2%;
-    
-    
 }
 .dropzone Button {
     margin-top: 5%;
+}
 
-   
+#hidden {
+    visibility: hidden;
 }
 
 .btnprevnext {

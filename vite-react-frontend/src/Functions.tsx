@@ -70,8 +70,7 @@ const Functions = (props) => {
 
     const handleGT = () => {
         setUpdated(gt)
-        console.log(updated)
-        
+        console.log(updated) //Shows the GT in console
     }
 
     //PDF renderer
@@ -129,7 +128,7 @@ const Functions = (props) => {
             </div>
                 <Button color="danger" onClick={() => setFile(null)}>Cancel</Button>
                 <Button color="secondary" onClick={handleGT}>Confirm GT</Button>
-                <Button color="primary" id="hidden" onClick={handleUpload}>Upload to server</Button>
+                <Button color="primary" id="hidden" style={{visibility: updated ? 'visible' : 'hidden'}}onClick={handleUpload}>Upload to server</Button>
         </div>
       <div style={{marginLeft: "60px"}}>
         <Document
