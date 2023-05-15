@@ -1,8 +1,9 @@
 from base64 import b64decode, b64encode
 import json
+import logging
 from pathlib import Path
 import psycopg2
-import tempfile
+from tempfile import TemporaryDirectory
 
 from sanic import Sanic
 from sanic.response import json as sanic_json, text
@@ -15,7 +16,8 @@ from synthetic.pdf.synthesizer import BasicSynthesizer
 
 
 app = Sanic(__name__)   # Create a Sanic app
-
+conn = None
+cursor = None
 
 CORS_OPTIONS = {"resources": r'/*', "origins": "*", "methods": ["GET", "POST", "HEAD", "OPTIONS"]}
 # Disable sanic-ext built-in CORS, and add the Sanic-CORS plugin
@@ -29,23 +31,25 @@ def run_synthsizer(request):
     if not request.json:
         return sanic_json({ "received": False, "message": "No JSON received in request"})
     
-    # Connect to the database   
     global conn
-    conn = psycopg2.connect(
-        database="storage_db",
-        user="postgres_usr",
-        password="postgres_pwd",
-        port="5432",
-        host="database"
-    )
     global cursor
+    conn = psycopg2.connect(
+    database="storage_db",
+    user="postgres_usr",
+    password="postgres_pwd",
+    port="5432",
+    host="database"
+    )
+
     cursor = conn.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS synthesized (id SERIAL PRIMARY KEY, pdf bytea, gt varchar);")
+
+    # Connect to the database  
+    cursor.execute("CREATE TABLE IF NOT EXISTS synthesized (id SERIAL UNIQUE PRIMARY KEY, pdf bytea, gt varchar);")
     conn.commit()
 
         
 
-    with tempfile.TemporaryDirectory(prefix='TemporaryDirectory_') as destdir:
+    with TemporaryDirectory() as destdir:
         json_data = request.json
 
         pdf_path = Path(f'{destdir}/dataPDF.pdf') # Creates a path and creates a pdf file
@@ -71,23 +75,25 @@ def run_synthsizer(request):
             #add pdf to synthesized table
             cursor.execute("INSERT INTO synthesized (pdf, gt) VALUES (%s, %s)", (b64encode(pdf_collection[i].read_bytes()).decode('utf-8'), gt_collection[i].read_text()))
             conn.commit()
+        
+        cursor.execute("SELECT * FROM synthesized WHere id = 1;")
+        data_from_db = cursor.fetchone()
+        logging.info(data_from_db)
 
-        get_id = request.path.split("/")[-1]
-        cursor.execute("SELECT * FROM synthesized WHERE id = %s;", [get_id])
-        row = cursor.fetchone()
-        json_statment = create_statement(row[1], row[2])
-
-        return sanic_json({ "received": True, "status": status, "message": json.dumps(json_statment)})
+        return text("Synthesized")
 
 # GET request to get the certain row from the database using the row_pointer-variable
-@app.route('/documents/{documentId}', methods=['GET'])
+@app.route('/documents/<document_id>', methods=['GET'])
 @cors(allow_methods="GET")
-def fetch_document(request):
+def fetch_document(request,document_id):
     get_id = request.path.split("/")[-1]
-    cursor.execute("SELECT * FROM synthesized WHERE id = %s;", (get_id,))
+    print(get_id)
+    logging.info("Fetching document")
+
+    cursor.execute("SELECT * FROM synthesized WHERE id = %s;", (document_id,))
     row = cursor.fetchone()
     json_statement= create_statement(row[1], row[2])
-
+    print(json_statement["GT"])
     return sanic_json({ "received": True, "message": json.dumps(json_statement)})
 
 
@@ -102,9 +108,9 @@ def testJSON(request):
         return text("Not eligible JSON")
 
 # DELETE request that deletes the row with the given id
-@app.route('/documents/{documentId}', methods=['DELETE'])
+@app.route('/documents/<id>', methods=['DELETE'])
 @cors(allow_methods="DELETE")
-def delete_document(request):
+def delete_document(request,document_id):
     get_id = request.path.split("/")[-1]
     cursor.execute("DELETE FROM synthesized WHERE id = %s;", (get_id,))
     conn.commit()
@@ -149,7 +155,9 @@ def create_statement(pdf_value, gt_value):
 
 if __name__ == "__main__":
     try:
+
         app.run(host="0.0.0.0", port=8000, debug=True)
+
     except psycopg2.Error as DB_error :
         print("Unable to connect to database", DB_error)
     except Exception as App_error:
