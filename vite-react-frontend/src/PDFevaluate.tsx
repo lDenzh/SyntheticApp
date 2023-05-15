@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import axios from 'axios';
 import JSZip from 'jszip';
@@ -27,6 +27,7 @@ var counter = 1; //Counts the number of documents that have been evaluated
  const getJson = async () => { 
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
+      isLoading();
       const response = await axios.get("http://localhost:8000/documents/"+counter);
       const data = await response.data;
       setPdf(data.PDF);
@@ -92,7 +93,18 @@ async function downloadDocumentsAsZip(): Promise<void> {
   }
 }
 
-return (
+const [loading, setLoading] = useState(true);
+function isLoading() {
+  
+  useEffect(() => {
+    const timoutID = setTimeout(() => setLoading(false), 3000);
+    return () => clearTimeout(timoutID);
+}, []);
+}
+
+if (loading) {
+  return <div>Loading...</div>;
+} if(!loading) return (
 <div className='container'>
   <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter+1}/10)</span></h4></div> 
     <div className='row justify-content-center'>
