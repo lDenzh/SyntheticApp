@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import axios from 'axios';
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import mypdf from './assets/tempPdf.pdf'
@@ -56,6 +58,34 @@ function onDocumentLoadSuccess({ numPages }) {
 
 let sampleGT:string = '[{\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  },\n  {\n   "label": "Totalsum",\n   "value": "528.00 kr"\n  },\n  {\n   "label": "Telefon",\n   "value": "+4794721323"\n  }\n]';
 
+async function downloadDocumentsAsZip(): Promise<void> {
+  try {
+    // Fetch all documents from the database using Axios
+    const response = await axios.get('localhost:8000/documents');
+
+    // Create a new JSZip instance
+    const zip = new JSZip();
+
+    // Add each document to the zip file
+    response.data.forEach((document: any) => {
+      // Decode the base64-encoded PDF to a Uint8Array
+      const pdfData = Uint8Array.from(atob(document.pdf), c => c.charCodeAt(0));
+      // Add the PDF to the zip file
+      zip.file(`${document.id}.pdf`, pdfData);
+      // Add the JSON data to the zip file
+      zip.file(`${document.id}.json`, JSON.stringify(document.json));
+    });
+
+    // Generate the zip file as a Blob
+    const blob = await zip.generateAsync({ type: 'blob' });
+
+    // Save the zip file to the user's computer using FileSaver.js
+    FileSaver.saveAs(blob, 'documents.zip');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 return (
 <div className='container'>
   <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter+1}/10)</span></h4></div> 
@@ -63,6 +93,7 @@ return (
       <div className='col-4'>
         <h5>Ground Truth JSON</h5>
         <pre>{gt}</pre>
+        <Button className="rounded-circle" color="info" onClick={downloadDocumentsAsZip} outline>&#10007;</Button>
       </div>
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
       <div className='col-6'>
