@@ -21,7 +21,7 @@ const [numPages, setNumPages] = useState(null);
 const [pageNumber, setPageNumber] = useState(1);
 const [pdf, setPdf] = useState(null);
 const [gt, setGt] = useState(null);
-var counter = 0; //Counts the number of documents that have been evaluated
+var counter = 1; //Counts the number of documents that have been evaluated
 
 //Function that will get the json object from backend using a get method with axios where the id is equal to counter
  const getJson = async () => { 
