@@ -96,7 +96,7 @@ const Functions = (props: any) => {
 
     if (file) return (
       
-    <div style={{display: "flex", flexDirection: "row"}}>
+    <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
       <div className="uploads">
             <ul>
                 {Array.from(file).map((file, idx) => <li key={idx}>{file.name}</li> )}
