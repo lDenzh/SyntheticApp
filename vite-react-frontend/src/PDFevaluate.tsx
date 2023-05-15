@@ -31,6 +31,7 @@ var counter = 1; //Counts the number of documents that have been evaluated
       const response = await axios.get("http://localhost:8000/documents/"+counter);
       const data = await response.data;
       setPdf(data.PDF);
+
       setGt(data.GT);
     } catch (error) {
       console.log(axios.AxiosError);
@@ -103,7 +104,7 @@ function isLoading() {
 }
 
 if (loading) {
-  return <div>Loading...</div>;
+  return <div className='spinner-container'><div className="lds-ripple"><div></div><div></div></div></div>;
 } if(!loading) return (
 <div className='container'>
   <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter+1}/10)</span></h4></div> 
