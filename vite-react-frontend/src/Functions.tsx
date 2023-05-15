@@ -50,9 +50,8 @@ const Functions = (props) => {
               },
               
         })
-        
-        console.log(data);
-       
+      ;
+       console.log(JSON.stringify(data));
     }
 
     const handleUpload = () => {
@@ -103,6 +102,7 @@ const Functions = (props) => {
             <ul>
                 {Array.from(file).map((file, idx) => <li key={idx}>{file.name}</li> )}
             </ul>
+            
             <div className ="input-container">
                 <textarea 
                     id="inputfield"
