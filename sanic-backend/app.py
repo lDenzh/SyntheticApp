@@ -113,7 +113,7 @@ def delete_document(request):
 # GET request that returns the all the rows in the database
 @app.route('/documents', methods=['GET'])
 @cors(allow_methods="GET")
-def all_documents():
+def all_documents(request):
     cursor.execute("SELECT * FROM synthesized;")
     data = cursor.fetchall()
     json_statment = {}
