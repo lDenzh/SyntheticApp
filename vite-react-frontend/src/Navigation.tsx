@@ -16,7 +16,7 @@ const Navigation = () => {
     const toggleNavbar = () => setCollapsed(!collapsed);
 
     const navbarStyle = {
-      margin: '20px 0 0 0'
+      width:'1280px', margin: '20px 0 0 0'
 
     }
 

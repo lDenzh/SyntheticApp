@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import mypdf from './assets/SampleInvoice.pdf'
+import mypdf from './assets/tempPdf.pdf'
 import './PDFevaluate.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -44,7 +44,7 @@ return (
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
       <div className='col-6'>
         <div className='pdfview'>
-            <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document file={mypdf} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
             </Document>
         </div>
