@@ -42,7 +42,7 @@ const Functions = (props: any) => {
         };
         console.log(payload);
 
-        const { data } = await axios.post("http://localhost:8000/runSynth", payload, {  //
+        const { data } = await axios.post("http://localhost:8000/synthesizer", payload, {  //
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json'
