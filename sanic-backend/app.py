@@ -1,17 +1,18 @@
-from sanic import Sanic
-from sanic.response import json as sanic_json, text 
-from sanic import text
-from sanic_ext import Extend, cors
-from sanic_cors.extension import CORS
-
-
-import json
-import tempfile
-from pathlib import Path
 from base64 import b64decode, b64encode
+import json
+from pathlib import Path
+import psycopg2
+import tempfile
+
+from sanic import Sanic
+from sanic.response import json as sanic_json, text
+
+from sanic_cors.extension import CORS
+from sanic_ext import Extend, cors
+
 from synthetic.pdf.parser import parse_pdf
 from synthetic.pdf.synthesizer import BasicSynthesizer
-import psycopg2
+
 
 app = Sanic(__name__)   # Create a Sanic app
 
@@ -20,10 +21,14 @@ CORS_OPTIONS = {"resources": r'/*', "origins": "*", "methods": ["GET", "POST", "
 # Disable sanic-ext built-in CORS, and add the Sanic-CORS plugin
 Extend(app, extensions=[CORS], config={"CORS": False, "CORS_OPTIONS": CORS_OPTIONS})
 
-@app.route('/runSynth', methods=['POST'])
+@app.route('/synthesizer', methods=['POST'])
 @cors(allow_methods="POST")
-def post_runSynth(request):
+def run_synthsizer(request):
 
+    # check if the request contains a json
+    if not request.json:
+        return sanic_json({ "received": False, "message": "No JSON received in request"})
+    
     # Connect to the database   
     global conn
     conn = psycopg2.connect(
@@ -37,73 +42,53 @@ def post_runSynth(request):
     cursor = conn.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS synthesized (id SERIAL PRIMARY KEY, pdf bytea, gt varchar);")
     conn.commit()
-    row_pointer = 1
+
         
-    # check if the request contains a json
-    if not request.json:
-        return sanic_json({ "received": False, "message": "No JSON received in request"})
-    else:
-        with tempfile.TemporaryDirectory(prefix='TemporaryDirectory_') as destdir:
-            print(destdir)
-            json_data = request.json
 
-            pdf_path = Path(f'{destdir}/dataPDF.pdf') # Creates a path and creates a pdf file
-            gt_path = Path(f'{destdir}/dataGT.json') # Creates a path and creates a json file
+    with tempfile.TemporaryDirectory(prefix='TemporaryDirectory_') as destdir:
+        json_data = request.json
 
-            pdf_path.write_bytes(b64decode(json_data["PDF"].encode('utf-8'))) #writes the pdf to the path
-            gt_path.write_text(json.dumps(json_data["GT"])) #writes the json to the path
+        pdf_path = Path(f'{destdir}/dataPDF.pdf') # Creates a path and creates a pdf file
+        gt_path = Path(f'{destdir}/dataGT.json') # Creates a path and creates a json file
+
+        pdf_path.write_bytes(b64decode(json_data["PDF"].encode('utf-8'))) #writes the pdf to the path
+        gt_path.write_text(json.dumps(json_data["GT"])) #writes the json to the path
+    
+        dest_dir = Path(destdir)
+        temp_dir = Path(f'{destdir}/tmpdirFlattened')
         
-            dest_dir = Path(destdir)
-            temp_dir = Path(f'{destdir}/tmpdirFlattened')
-            
-            status = synthesize_document(pdf_path,gt_path,dest_dir,temp_dir)
-            
-            pdf_collection = list(dest_dir.glob('**/*.pdf'))
-            gt_collection = list(dest_dir.glob('**/*.json'))
-            
+        status = synthesize_document(pdf_path,gt_path,dest_dir,temp_dir)
+        
+        pdf_collection = list(dest_dir.glob('**/*.pdf'))
+        gt_collection = list(dest_dir.glob('**/*.json'))
+        
 
-            #adds the pdfs and gts to the json
-            if len(pdf_collection) != len(gt_collection):
-                return sanic_json({ "received": False, "status": status, "message": "Number of PDFs and GTs are not equal"})
-            
-            for i in range(len(pdf_collection)): 
-                #add pdf to synthesized table
-                cursor.execute("INSERT INTO synthesized (pdf, gt) VALUES (%s, %s)", (b64encode(pdf_collection[i].read_bytes()).decode('utf-8'), gt_collection[i].read_text()))
-                conn.commit()
-                            
-                #json_statment["PDF"][pdf.name] = raw_pdf
-            # del json_statment["PDF"]["dataPDF.pdf"]
+        #adds the pdfs and gts to the json
+        if len(pdf_collection) != len(gt_collection):
+            return sanic_json({ "received": False, "status": status, "message": "Number of PDFs and GTs are not equal"})
+        
+        for i in range(len(pdf_collection)): 
+            #add pdf to synthesized table
+            cursor.execute("INSERT INTO synthesized (pdf, gt) VALUES (%s, %s)", (b64encode(pdf_collection[i].read_bytes()).decode('utf-8'), gt_collection[i].read_text()))
+            conn.commit()
 
-            # for gt in gt_collection:
-            #     json_statment["GT"][gt.name] = gt.read_text()
-            # del json_statment["GT"]["dataGT.json"]
+        get_id = request.path.split("/")[-1]
+        cursor.execute("SELECT * FROM synthesized WHERE id = %s;", [get_id])
+        row = cursor.fetchone()
+        json_statment = create_statement(row[1], row[2])
 
-            # return_statement = json.dumps(json_statment
-            # Get first row of the table
-
-            cursor.execute("SELECT * FROM synthesized WHERE id = %s;", [row_pointer])
-            row_pointer+=1
-            row = cursor.fetchone()
-            json_statment = {
-                "PDF" : b64encode(bytes(row[1])).decode('utf-8'),
-                "GT" : json.loads(row[2])
-            }
-
-            return sanic_json({ "received": True, "status": status, "message": json.dumps(json_statment)})
+        return sanic_json({ "received": True, "status": status, "message": json.dumps(json_statment)})
 
 # GET request to get the certain row from the database using the row_pointer-variable
-@app.route('/getDATA', methods=['GET'])
+@app.route('/documents/{documentId}', methods=['GET'])
 @cors(allow_methods="GET")
-def getSynth(request):
-
-    cursor.execute("SELECT * FROM synthesized WHERE id = %s;", (row_pointer,))
+def fetch_document(request):
+    get_id = request.path.split("/")[-1]
+    cursor.execute("SELECT * FROM synthesized WHERE id = %s;", (get_id,))
     row = cursor.fetchone()
-    row_pointer += 1
-    json_statment = {
-        "PDF" : b64encode(bytes(row[1])).decode('utf-8'),
-        "GT" : json.loads(row[2])
-    }
-    return sanic_json({ "received": True, "message": json.dumps(json_statment)})
+    json_statement= create_statement(row[1], row[2])
+
+    return sanic_json({ "received": True, "message": json.dumps(json_statement)})
 
 
 # POST request that checks if the json is eligible
@@ -117,25 +102,24 @@ def testJSON(request):
         return text("Not eligible JSON")
 
 # DELETE request that deletes the row with the given id
-@app.route('/deleteSynth', methods=['DELETE'])
+@app.route('/documents/{documentId}', methods=['DELETE'])
 @cors(allow_methods="DELETE")
-def deleteSynth(request):
-    cursor.execute("DELETE FROM synthesized WHERE id = %s;", request.json["id"])
+def delete_document(request):
+    get_id = request.path.split("/")[-1]
+    cursor.execute("DELETE FROM synthesized WHERE id = %s;", (get_id,))
     conn.commit()
     return text("Deleted")
 
 # GET request that returns the all the rows in the database
-@app.route('/getAllDATA', methods=['GET'])
+@app.route('/documents', methods=['GET'])
 @cors(allow_methods="GET")
-def getAllDATA(request):
+def all_documents():
     cursor.execute("SELECT * FROM synthesized;")
-    rows = cursor.fetchall()
+    data = cursor.fetchall()
     json_statment = {}
-    for row in rows:
-        json_statment[row[0]] = {
-            "PDF" : b64encode(bytes(row[1])).decode('utf-8'),
-            "GT" : json.loads(row[2])
-        }
+    for data_pair in data:
+        json_statment[data_pair[0]] = create_statement(data_pair[1], data_pair[2])
+
     return sanic_json({ "received": True, "message": json.dumps(json_statment)})
 
 
@@ -157,6 +141,11 @@ def synthesize_document(pdf_path:Path, ground_truth:Path, dest_dir:Path, temp_di
     )
     return status
 
+def create_statement(pdf_value, gt_value):
+    return {
+        "PDF" : b64encode(bytes(pdf_value)).decode('utf-8'),
+        "GT" : json.loads(gt_value)
+    }
 
 if __name__ == "__main__":
     try:
@@ -166,7 +155,7 @@ if __name__ == "__main__":
     except Exception as App_error:
             print("Server shut down", App_error)
     finally:
-        if (conn):
+        if conn:
             cursor.close()
             conn.close()
             print("Connection closed \n")
