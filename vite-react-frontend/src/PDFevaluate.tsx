@@ -23,7 +23,7 @@ var counter = 0; //Counts the number of documents that have been evaluated
 
 //Function that will get the json object from backend using a get method with axios where the id is equal to counter
  const getJson = async () => { 
-    const response = await axios.get("http://localhost:8000/getJson"+"?id="+counter);
+    const response = await axios.get("http://localhost:8000/documents/"+counter);
     const data = await response.data;
     setPdf(data.PDF);
     setGt(data.GT);
@@ -31,7 +31,7 @@ var counter = 0; //Counts the number of documents that have been evaluated
 
  //function that deletes the json object from the database where the id is equal to counter
 const deleteJson = async () => {
-  const response = await axios.delete("http://localhost:8000/deleteJson"+"?id="+counter);
+  const response = await axios.delete("http://localhost:8000/documents/"+counter);
   const data = await response.data;
   console.log(data);
 }
