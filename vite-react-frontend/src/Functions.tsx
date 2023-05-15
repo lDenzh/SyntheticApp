@@ -1,5 +1,4 @@
 import React, {useRef, useState} from "react";
-import {uploadSuccess, setUploadSuccess} from "./App";
 import axios, {isAxiosError} from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
@@ -8,11 +7,11 @@ import "./Functions.css";
 import { Document, Page } from 'react-pdf/dist/esm/entry.vite';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import PDFevaluate from "./PDFevaluate";
 
 
 
-const Functions = (props) => {
+
+const Functions = (props: any) => {
     const [file, setFile] = useState<any | null>();
     const inputRef = useRef();
 
