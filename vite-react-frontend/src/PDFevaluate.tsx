@@ -61,7 +61,7 @@ let sampleGT:string = '[{\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  }
 async function downloadDocumentsAsZip(): Promise<void> {
   try {
     // Fetch all documents from the database using Axios
-    const response = await axios.get('localhost:8000/documents');
+    const response = await axios.get('http://localhost:8000/documents');
 
     // Create a new JSZip instance
     const zip = new JSZip();
@@ -93,7 +93,7 @@ return (
       <div className='col-4'>
         <h5>Ground Truth JSON</h5>
         <pre>{gt}</pre>
-        <Button className="rounded-circle" color="info" onClick={downloadDocumentsAsZip} outline>&#10007;</Button>
+        <Button color="primary" onClick={downloadDocumentsAsZip} outline>Download all files;</Button>
       </div>
       <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
       <div className='col-6'>
