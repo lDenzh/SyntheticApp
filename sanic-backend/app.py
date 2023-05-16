@@ -94,7 +94,7 @@ def fetch_document(request,document_id):
     row = cursor.fetchone()
     json_statement= create_statement(row[1], row[2])
     print(json_statement["GT"])
-    return sanic_json({ "received": True, "message": json.dumps(json_statement)})
+    return sanic_json({ "received": True, "message": json_statement})
 
 
 # POST request that checks if the json is eligible
