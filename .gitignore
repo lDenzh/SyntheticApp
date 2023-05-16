@@ -13,5 +13,4 @@ testsuite/src/assets/IkeaInvoice.pdf
 /sanic-backend/gt_ IKEA.json
 sanic-backend/gt_IKEA.json
 node_modules
-
-
+sanic-backend/database.env

@@ -22,10 +22,8 @@ services:
     ports:
       - "5432:5432"
 
-    environment:
-      POSTGRES_USER: postgres_usr
-      POSTGRES_PASSWORD: postgres_pwd
-      POSTGRES_DB: storage_db
+    env_file:
+      - ./sanic-backend/database.env
     
     networks:
       - network
