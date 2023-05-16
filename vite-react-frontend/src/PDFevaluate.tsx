@@ -17,22 +17,30 @@ import { Button } from 'reactstrap';
 
 const PDFevaluate = (props: any) => {
 
+  
+
+  interface BackendResponse {
+    PDF: string;
+    GT: string;
+  }
+
 const [numPages, setNumPages] = useState(null);
 const [pageNumber, setPageNumber] = useState(1);
-const [pdf, setPdf] = useState(null);
-const [gt, setGt] = useState(null);
+const [pdf, setPdf] = useState("");
+const [gt, setGt] = useState("");
 var counter = 1; //Counts the number of documents that have been evaluated
-
+isLoading();
 //Function that will get the json object from backend using a get method with axios where the id is equal to counter
  const getJson = async () => { 
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
-      isLoading();
+      
       const response = await axios.get("http://localhost:8000/documents/"+counter);
-      const data = await response.data;
-      setPdf(data.PDF);
-
-      setGt(data.GT);
+      
+      console.log(response);
+      setPdf(response.data.message.PDF); //set pdf to the pdf from the database with the id equal to counter
+      console.log(response.GT);
+      setGt(response.GT);
     } catch(error:any) {
     if (error.response) {
       // The request was made and the server responded with a status code
@@ -113,7 +121,7 @@ const [loading, setLoading] = useState(true);
 function isLoading() {
   
   useEffect(() => {
-    const timoutID = setTimeout(() => setLoading(false), 3000);
+    const timoutID = setTimeout(() => setLoading(false), 6000);
     return () => clearTimeout(timoutID);
 }, []);
 }
@@ -129,10 +137,10 @@ if (loading) {
         <pre>{gt}</pre>
         <Button color="primary" onClick={downloadDocumentsAsZip} outline>Download all files;</Button>
       </div>
-      <div className='col-1'><Button className="rounded-circle" color="danger" outline>&#10007;</Button></div>
+      <div className='col-1'><Button className="rounded-circle" color="danger" onClick={deleteDoc} outline>&#10007;</Button></div>
       <div className='col-6'>
         <div className='pdfview'>
-            <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document file={`data:application/pdf;base64,${pdf}`} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
             </Document>
         </div>

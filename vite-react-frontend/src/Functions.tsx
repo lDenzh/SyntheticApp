@@ -51,11 +51,11 @@ const Functions = (props: any) => {
         })
       ;
        console.log(JSON.stringify(data));
+       props.onDisplayChange(true);
     }
 
     const handleUpload = async() => {
         Postman();
-        await props.onDisplayChange(true);
     }
 
     const gtRef = useRef(null);
