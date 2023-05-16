@@ -20,8 +20,13 @@ const PDFevaluate = (props: any) => {
   
 
   interface BackendResponse {
-    PDF: string;
-    GT: string;
+    data: {
+      received: boolean;
+      message: {
+        PDF: string;
+        GT: string;
+      }
+    }
   }
 
 const [numPages, setNumPages] = useState(null);
@@ -35,12 +40,13 @@ isLoading();
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
       
-      const response = await axios.get("http://localhost:8000/documents/"+counter);
+      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+counter);
+
+      var decodedPDFAtob = atob(response.data.message.PDF); //decode the pdf from double-encoded base64 to base64-string 
+      setPdf(decodedPDFAtob); //set the pdf state to the pdf from the json object
+      setGt(response.data.message.GT);
+      //set the pdf and gt state to the pdf and gt from the json object
       
-      console.log(response);
-      setPdf(response.data.message.PDF); //set pdf to the pdf from the database with the id equal to counter
-      console.log(response.GT);
-      setGt(response.GT);
     } catch(error:any) {
     if (error.response) {
       // The request was made and the server responded with a status code
