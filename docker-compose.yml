@@ -6,6 +6,8 @@ services:
     container_name: sanic
     ports:
       - "8000:8000"
+    env_file:
+      - ./sanic-backend/database.env
     networks:
       - network
 
