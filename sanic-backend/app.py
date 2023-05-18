@@ -51,7 +51,7 @@ def run_synthsizer(request):
         )
         cursor = conn.cursor()
         conn.autocommit = True
- 
+        cursor.execute("DROP TABLE IF EXISTS synthesized;")
 
     # Connect to the database
     
