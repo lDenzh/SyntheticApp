@@ -66,7 +66,7 @@ def run_synthsizer(request):
         pdf_path = Path(f'{destdir}/dataPDF.pdf')
         gt_path = Path(f'{destdir}/dataGT.json')
 
-        pdf_path.write_bytes(b64decode(json_data["PDF"].encode('utf-8')))
+        pdf_path.write_bytes(b64decode(json_data["PDF"]))
         gt_path.write_text(json_data["GT"])
 
         dest_dir = Path(destdir)
