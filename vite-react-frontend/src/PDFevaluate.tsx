@@ -17,8 +17,6 @@ import { Button } from 'reactstrap';
 
 const PDFevaluate = (props: any) => {
 
-  
-
   interface BackendResponse {
     data: {
       received: boolean;
@@ -42,8 +40,8 @@ isLoading();
       
       let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+counter);
 
-      var decodedPDFAtob = atob(response.data.message.PDF); //decode the pdf from double-encoded base64 to base64-string 
-      setPdf(decodedPDFAtob); //set the pdf state to the pdf from the json object
+      var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
+      setPdf(b64PDF); //set the pdf state to the pdf from the json object
       setGt(response.data.message.GT);
       //set the pdf and gt state to the pdf and gt from the json object
       
