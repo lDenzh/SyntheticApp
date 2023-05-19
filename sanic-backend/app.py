@@ -21,7 +21,7 @@ cursor = None
 CORS_OPTIONS = {
     "resources": r'/*',
     "origins": "*",
-    "methods": ["GET", "POST", "HEAD", "OPTIONS"]
+    "methods": ["GET", "POST", "HEAD", "OPTIONS", "DELETE"]
     }
 # Disable sanic-ext built-in CORS, and add the Sanic-CORS plugin
 Extend(app, extensions=[CORS],
@@ -74,14 +74,24 @@ def run_synthsizer(request):
 
         status = synthesize_document(pdf_path, gt_path, dest_dir, temp_dir)
 
-        pdf_collection = list(dest_dir.glob('**/*.pdf'))
-        gt_collection = list(dest_dir.glob('**/*.json'))
+        pdf_collection = sorted(list(dest_dir.glob('**/*.pdf')), key=lambda x: x.name)
+        gt_collection = sorted(list(dest_dir.glob('**/*.json')), key=lambda x: x.name)
+
+        del pdf_collection[-1]
+        del gt_collection[-1]
+
 
         # adds the pdfs and gts to the json
         if len(pdf_collection) != len(gt_collection):
             return sanic_json({"received": False, "status": status,
                                "message":
                                "Number of PDFs and GTs are not equal"})
+
+        for pdf in pdf_collection:
+            print(pdf.name)
+        
+        for gt in gt_collection:
+            print(gt.name)
 
         for i in range(len(pdf_collection)):
             # add pdf to synthesized table
@@ -167,6 +177,8 @@ def create_statement(pdf_value, gt_value, org_id):
         "orgID": org_id
     }
 
+def sort_name(file_name):
+    return len(file_name.name);
 
 if __name__ == "__main__":
     try:
