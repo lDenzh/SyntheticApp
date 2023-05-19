@@ -81,17 +81,15 @@ def run_synthsizer(request, orgId):
             list(dest_dir.glob('**/*.json')), key=lambda x: x.name
             )
 
-        if pdf_collection[-1].name == "dataPDF.pdf":
-            del pdf_collection[-1]
-        else:
+        if pdf_collection[-1].name != "dataPDF.pdf":
             return sanic_json({"received": False,
                                "message": "PDF not handled correctly"})
-
-        if gt_collection[-1].name == "dataGT.json":
-            del gt_collection[-1]
-        else:
+        if gt_collection[-1].name != "dataGT.json":
             return sanic_json({"received": False,
                                "message": "GT not handled correctly"})
+
+        del pdf_collection[-1]
+        del gt_collection[-1]
 
         for i in range(len(pdf_collection)):
             # add pdf to synthesized table
