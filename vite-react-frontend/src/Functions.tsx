@@ -62,7 +62,7 @@ const Functions = (props: any) => {
     const [gt, setGt] = useState('')
     const [updated, setUpdated] = useState(gt)
     
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setGt(e.target.value)
     }
 
@@ -80,7 +80,7 @@ const Functions = (props: any) => {
       setPageNumber(1);
     }
   
-    function changePage(offset) {
+    function changePage(offset:number) {
       setPageNumber(prevPageNumber => prevPageNumber + offset);
     }
   
@@ -106,7 +106,6 @@ const Functions = (props: any) => {
                 <textarea 
                     id="inputfield"
                     ref={gtRef}
-                    type="text"
                     onChange={handleChange}
                     placeholder='    
 {
@@ -141,14 +140,12 @@ const Functions = (props: any) => {
       </p>
       <div className="btnprevnext">
         <Button
-          type="Button"
           disabled={pageNumber <= 1}
           onClick={previousPage}
         >
           Previous
         </Button>
         <Button
-          type="Button"
           disabled={pageNumber >= numPages}
           onClick={nextPage}
         >
