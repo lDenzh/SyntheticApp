@@ -29,10 +29,10 @@ Extend(app, extensions=[CORS],
 
 
 # POST request that synthesizes the pdf and gt
-@app.route('/synthesizer', methods=['POST'])
+@app.route('/synthesizer/<orgId>', methods=['POST'])
 @cors(allow_methods="POST")
-def run_synthsizer(request):
-    org_id = 1
+def run_synthsizer(request, orgId):
+
     # check if the request contains a json
     if not request.json:
         return sanic_json({"received": False,
@@ -101,7 +101,7 @@ def run_synthsizer(request):
             # add pdf to synthesized table
             #data = b64encode(pdf_collection[i].read_bytes()).decode('utf-8')
             cursor.execute("INSERT INTO synthesized (pdf, gt, orgID) VALUES (%s, %s, %s)",
-                           (pdf_collection[i].read_bytes(), gt_collection[i].read_text(), org_id))
+                           (pdf_collection[i].read_bytes(), gt_collection[i].read_text(), orgId))
 
         return text("Synthesized")
 
