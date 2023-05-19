@@ -52,13 +52,12 @@ def run_synthsizer(request):
         cursor = conn.cursor()
         conn.autocommit = True
         cursor.execute("DROP TABLE IF EXISTS synthesized;")
-
-    # Connect to the database
-    
-    cursor.execute(
-        """CREATE TABLE synthesized
-        (id SERIAL PRIMARY KEY, pdf bytea, 
-         gt VARCHAR, orgID INTEGER);""")
+        
+        # Connect to the database
+        cursor.execute(
+            """CREATE TABLE synthesized
+            (id SERIAL PRIMARY KEY, pdf bytea, 
+            gt VARCHAR, orgID INTEGER);""")
 
     with TemporaryDirectory() as destdir:
         json_data = request.json
@@ -77,15 +76,20 @@ def run_synthsizer(request):
         pdf_collection = sorted(list(dest_dir.glob('**/*.pdf')), key=lambda x: x.name)
         gt_collection = sorted(list(dest_dir.glob('**/*.json')), key=lambda x: x.name)
 
-        del pdf_collection[-1]
-        del gt_collection[-1]
+        if pdf_collection[-1].name == "dataPDF.pdf":
+            del pdf_collection[-1]
+        else:
+            return sanic_json({"received": False,
+                           "message": "PDF not handled correctly"})
+        
+        if gt_collection[-1].name == "dataGT.json":
+            del gt_collection[-1]
+        else:
+            return sanic_json({"received": False,
+                           "message": "GT not handled correctly"})
 
 
-        # adds the pdfs and gts to the json
-        if len(pdf_collection) != len(gt_collection):
-            return sanic_json({"received": False, "status": status,
-                               "message":
-                               "Number of PDFs and GTs are not equal"})
+      
 
         for pdf in pdf_collection:
             print(pdf.name)
