@@ -8,6 +8,15 @@ import { useState } from 'react'
 function App(props:any) {
 
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [idCounter, setIdCounter] = useState<number>(1);
+
+  const handleId = (value:any) => {
+    setIdCounter(value);
+  };
+
+  const getID = () => {
+    return idCounter;
+  }
   
   const handleDisplayChange = (value:any) => {
     setUploadSuccess(value);
@@ -17,9 +26,9 @@ function App(props:any) {
   return (
     <Layout>
       {uploadSuccess ? (
-        <PDFevaluate onDisplayChange={handleDisplayChange}/>
+        <PDFevaluate onDisplayChange={handleDisplayChange} onChange={getID}/>
       ) : (
-        <Functions  onDisplayChange={handleDisplayChange} />
+        <Functions  onDisplayChange={handleDisplayChange} onChange={handleId}  />
       )}
     </Layout>
   )
