@@ -16,8 +16,8 @@ import { Button } from 'reactstrap';
 
 
 const PDFevaluate = (props: any) => {
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [numPages, setNumPages] = useState<any | number>(null);
+  const [pageNumber, setPageNumber] = useState<number>(1);
   const [pdf, setPdf] = useState("");
   const [gt, setGt] = useState("");
   const [counter, setCounter] = useState<number>(1);
@@ -84,7 +84,9 @@ useEffect(() => {
 
 //Function that will get the next document to evaluate
 const nextDoc = () => {
-  setCounter(counter+1)
+  if (counter<10){
+    setCounter(counter+1)
+  }
   console.log("imma fetch doc nr: "+counter);
   fetchData();
 }
@@ -92,7 +94,9 @@ const nextDoc = () => {
 const deleteDoc = () => {
   deleteJson();
   console.log("imma delete doc nr: "+counter);
-  setCounter(counter+1)
+  if (counter<10){
+    setCounter(counter+1)
+  }
   fetchData();
 }
 
