@@ -41,7 +41,7 @@ def run_synthsizer(request, orgId):
     global conn
     global cursor
     if conn is None:
-        
+
         conn = psycopg2.connect(
             database=os.environ["POSTGRES_DB"],
             user=os.environ["POSTGRES_USER"],
@@ -52,11 +52,11 @@ def run_synthsizer(request, orgId):
         cursor = conn.cursor()
         conn.autocommit = True
         cursor.execute("DROP TABLE IF EXISTS synthesized;")
-        
+
         # Connect to the database
         cursor.execute(
             """CREATE TABLE synthesized
-            (id SERIAL PRIMARY KEY, pdf bytea, 
+            (id SERIAL PRIMARY KEY, pdf bytea,
             gt VARCHAR, orgID INTEGER);""")
 
     with TemporaryDirectory() as destdir:
@@ -73,26 +73,30 @@ def run_synthsizer(request, orgId):
 
         status = synthesize_document(pdf_path, gt_path, dest_dir, temp_dir)
 
-        pdf_collection = sorted(list(dest_dir.glob('**/*.pdf')), key=lambda x: x.name)
-        gt_collection = sorted(list(dest_dir.glob('**/*.json')), key=lambda x: x.name)
+        pdf_collection = sorted(
+            list(dest_dir.glob('**/*.pdf')), key=lambda x: x.name
+            )
 
-        if pdf_collection[-1].name == "dataPDF.pdf":
-            del pdf_collection[-1]
-        else:
+        gt_collection = sorted(
+            list(dest_dir.glob('**/*.json')), key=lambda x: x.name
+            )
+
+        if pdf_collection[-1].name != "dataPDF.pdf":
             return sanic_json({"received": False,
-                           "message": "PDF not handled correctly"})
-        
-        if gt_collection[-1].name == "dataGT.json":
-            del gt_collection[-1]
-        else:
+                               "message": "PDF not handled correctly"})
+        if gt_collection[-1].name != "dataGT.json":
             return sanic_json({"received": False,
-                           "message": "GT not handled correctly"})
+                               "message": "GT not handled correctly"})
+
+        del pdf_collection[-1]
+        del gt_collection[-1]
 
         for i in range(len(pdf_collection)):
             # add pdf to synthesized table
-            #data = b64encode(pdf_collection[i].read_bytes()).decode('utf-8')
-            cursor.execute("INSERT INTO synthesized (pdf, gt, orgID) VALUES (%s, %s, %s)",
-                           (pdf_collection[i].read_bytes(), gt_collection[i].read_text(), orgId))
+            cursor.execute("""INSERT INTO synthesized (pdf, gt, orgID)
+                           VALUES (%s, %s, %s)""",
+                           (pdf_collection[i].read_bytes(),
+                            gt_collection[i].read_text(), orgId))
 
         return sanic_text(status)
 
@@ -103,10 +107,11 @@ def run_synthsizer(request, orgId):
 def fetch_document(request, orgId, documentId):
 
     logging.info("Fetching document")
-    cursor.execute("SELECT * FROM synthesized WHERE id = %s AND orgId = %s", (documentId,orgId))
+    cursor.execute("""SELECT * FROM synthesized
+                   WHERE id = %s AND orgId = %s""", (documentId, orgId))
     row = cursor.fetchone()
     json_statement = create_statement(row[1], row[2], row[3])
-    
+
     return sanic_json({"received": True, "message": json_statement})
 
 
@@ -114,7 +119,8 @@ def fetch_document(request, orgId, documentId):
 @app.route('/documents/<orgId>/<documentId>', methods=['DELETE'])
 @cors(allow_methods="DELETE")
 def delete_document(request, orgId, documentId):
-    cursor.execute("DELETE FROM synthesized WHERE id = %s AND orgId = %s;", (documentId,orgId))
+    cursor.execute("DELETE FROM synthesized WHERE id = %s AND orgId = %s;",
+                   (documentId, orgId))
     return sanic_text("Deleted")
 
 
@@ -132,6 +138,7 @@ def all_documents(request):
 
     return sanic_json({"received": True, "message": json_statment})
 
+
 # GET request that returns the all the rows accoring to the orgID
 @app.route('/documents/<orgId>', methods=['GET'])
 @cors(allow_methods="GET")
@@ -145,6 +152,7 @@ def all_documents_org(request, orgId):
                                                        data_pair[3])
 
     return sanic_json({"received": True, "message": json_statment})
+
 
 # Synthesizes the pdf and gt
 def synthesize_document(
@@ -172,8 +180,10 @@ def create_statement(pdf_value, gt_value, org_id):
         "orgID": org_id
     }
 
+
 def sort_name(file_name):
-    return len(file_name.name);
+    return len(file_name.name)
+
 
 if __name__ == "__main__":
     try:
