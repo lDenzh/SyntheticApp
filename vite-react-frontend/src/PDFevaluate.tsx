@@ -16,25 +16,27 @@ import { Button } from 'reactstrap';
 
 
 const PDFevaluate = (props: any) => {
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pdf, setPdf] = useState("");
+  const [gt, setGt] = useState("");
+  const [counter, setCounter] = useState<number>(1);
 
   interface BackendResponse {
     data: {
       received: boolean;
       message: {
         PDF: string;
-        GT: string;
+        GT: {
+          label: string;
+          value: string;
+        }
       }
     }
   }
-
-const [numPages, setNumPages] = useState(null);
-const [pageNumber, setPageNumber] = useState(1);
-const [pdf, setPdf] = useState("");
-const [gt, setGt] = useState("");
-var counter = 1; //Counts the number of documents that have been evaluated
-isLoading();
-//Function that will get the json object from backend using a get method with axios where the id is equal to counter
- const getJson = async () => { 
+  
+  //Function that will get the json object from backend using a get method with axios where the id is equal to counter
+  const fetchData = async () => { 
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
       
@@ -42,7 +44,7 @@ isLoading();
 
       var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
       setPdf(b64PDF); //set the pdf state to the pdf from the json object
-      setGt(response.data.message.GT);
+      setGt(JSON.stringify(response.data.message.GT));
       //set the pdf and gt state to the pdf and gt from the json object
       
     } catch(error:any) {
@@ -72,18 +74,26 @@ const deleteJson = async () => {
   const data = await response.data;
   console.log(data);
 }
- getJson(); //displays the first document when the page is loaded
+
+isLoading();
+//Displays the first document when the page is loaded
+useEffect(() => {
+  console.log("imma fetch doc nr: "+counter);
+  fetchData();
+}, []);
 
 //Function that will get the next document to evaluate
 const nextDoc = () => {
-  counter++;
-  getJson();
+  setCounter(counter+1)
+  console.log("imma fetch doc nr: "+counter);
+  fetchData();
 }
 //Function that will delete the current document and get the next document to evaluate
 const deleteDoc = () => {
   deleteJson();
-  counter++;
-  getJson();
+  console.log("imma delete doc nr: "+counter);
+  setCounter(counter+1)
+  fetchData();
 }
 
 
@@ -122,10 +132,10 @@ async function downloadDocumentsAsZip(): Promise<void> {
 }
 
 const [loading, setLoading] = useState(true);
+
 function isLoading() {
-  
   useEffect(() => {
-    const timoutID = setTimeout(() => setLoading(false), 6000);
+    const timoutID = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timoutID);
 }, []);
 }
@@ -134,11 +144,11 @@ if (loading) {
   return <div className='spinner-container'><div className="lds-ripple"><div></div><div></div></div></div>;
 } if(!loading) return (
 <div className='container'>
-  <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter+1}/10)</span></h4></div> 
+  <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter}/10)</span></h4></div> 
     <div className='row justify-content-center'>
       <div className='col-4'>
         <h5>Ground Truth JSON</h5>
-        <pre>{gt}</pre>
+        <p>{gt}</p>
         <Button color="primary" onClick={downloadDocumentsAsZip} outline>Download all files;</Button>
       </div>
       <div className='col-1'><Button className="rounded-circle" color="danger" onClick={deleteDoc} outline>&#10007;</Button></div>
