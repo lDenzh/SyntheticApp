@@ -39,7 +39,7 @@ const PDFevaluate = (props: any) => {
   const fetchData = async () => { 
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
-      
+      console.log("counter = "+counter);
       let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+props.onload()+"/"+counter);
       
       var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
@@ -77,10 +77,9 @@ useEffect(() => {
 
 //Function that will get the next document to evaluate
 const nextDoc = () => {
-  if (counter<10){
+  if (counter < 10){
     setCounter(counter+1)
   }
-  console.log("imma fetch doc nr: "+counter);
   fetchData();
 }
 //Function that will delete the current document and get the next document to evaluate
@@ -89,7 +88,7 @@ const deleteDoc = async () => {
   const data = await response.data;
   console.log(data);
   console.log("imma delete doc nr: "+counter);
-  if (counter<10){
+  if (counter < 10){
     setCounter(counter+1)
   }
   fetchData();

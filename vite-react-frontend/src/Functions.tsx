@@ -15,6 +15,10 @@ const Functions = (props: any) => {
     const [file, setFile] = useState<any | null>();
     const inputRef = useRef();
 
+    useEffect(() => {
+        props.onChange(); //call the handleId function from App.tsx and update docID to the current value of idCounter
+    }, []);
+
     const handleDrag = (e: React.DragEvent) => {
         e.preventDefault();
     };
@@ -42,7 +46,7 @@ const Functions = (props: any) => {
         };
         console.log(payload);
 
-        props.onChange();
+        
         console.log("this.docID = "+props.onload());
 
         const { data } = await axios.post("http://localhost:8000/synthesizer/"+props.onload(), payload, {  
