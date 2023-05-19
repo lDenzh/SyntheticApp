@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios, {isAxiosError} from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
@@ -42,7 +42,10 @@ const Functions = (props: any) => {
         };
         console.log(payload);
 
-        const { data } = await axios.post("http://localhost:8000/synthesizer/"+props.idCounter, payload, {  
+        props.onChange();
+        console.log("this.docID = "+props.onload());
+
+        const { data } = await axios.post("http://localhost:8000/synthesizer/"+props.onload(), payload, {  
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json'
@@ -50,8 +53,6 @@ const Functions = (props: any) => {
               
         })
       ;
-        console.log("this.docID = "+props.getID);
-       props.onChange(props.idCounter + 1);
        
        console.log(JSON.stringify(data));
        props.onDisplayChange(true);

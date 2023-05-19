@@ -40,8 +40,8 @@ const PDFevaluate = (props: any) => {
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
       
-      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+props.getID+"/"+counter);
-
+      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+props.onload()+"/"+counter);
+      
       var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
       setPdf(b64PDF); //set the pdf state to the pdf from the json object
       setGt(JSON.stringify(response.data.message.GT));
@@ -85,7 +85,7 @@ const nextDoc = () => {
 }
 //Function that will delete the current document and get the next document to evaluate
 const deleteDoc = async () => {
-  const response = await axios.delete("http://localhost:8000/documents/"+props.getID+"/"+counter);
+  const response = await axios.delete("http://localhost:8000/documents/"+props.onload()+"/"+counter);
   const data = await response.data;
   console.log(data);
   console.log("imma delete doc nr: "+counter);
@@ -141,9 +141,9 @@ function isLoading() {
 
 if (loading) {
   return <div className='spinner-container'><div className="lds-ripple"><div></div><div></div></div></div>;
-} if(!loading) return (
+} else return (
 <div className='container'>
-  <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter}/10)</span></h4></div> 
+  <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter}/10) of {props.onload()}</span></h4></div> 
     <div className='row justify-content-center'>
       <div className='col-4'>
         <h5>Ground Truth JSON</h5>
