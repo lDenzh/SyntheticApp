@@ -40,7 +40,7 @@ const PDFevaluate = (props: any) => {
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
       
-      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+counter);
+      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+props.getID+"/"+counter);
 
       var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
       setPdf(b64PDF); //set the pdf state to the pdf from the json object
@@ -68,13 +68,6 @@ const PDFevaluate = (props: any) => {
     
  }
 
- //function that deletes the json object from the database where the id is equal to counter
-const deleteJson = async () => {
-  const response = await axios.delete("http://localhost:8000/documents/"+counter);
-  const data = await response.data;
-  console.log(data);
-}
-
 isLoading();
 //Displays the first document when the page is loaded
 useEffect(() => {
@@ -91,8 +84,10 @@ const nextDoc = () => {
   fetchData();
 }
 //Function that will delete the current document and get the next document to evaluate
-const deleteDoc = () => {
-  deleteJson();
+const deleteDoc = async () => {
+  const response = await axios.delete("http://localhost:8000/documents/"+props.getID+"/"+counter);
+  const data = await response.data;
+  console.log(data);
   console.log("imma delete doc nr: "+counter);
   if (counter<10){
     setCounter(counter+1)

@@ -42,7 +42,7 @@ const Functions = (props: any) => {
         };
         console.log(payload);
 
-        const { data } = await axios.post("http://localhost:8000/synthesizer", payload, {  //
+        const { data } = await axios.post("http://localhost:8000/synthesizer/"+props.idCounter, payload, {  
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json'
@@ -50,6 +50,9 @@ const Functions = (props: any) => {
               
         })
       ;
+        console.log("this.docID = "+props.getID);
+       props.onChange(props.idCounter + 1);
+       
        console.log(JSON.stringify(data));
        props.onDisplayChange(true);
     }
@@ -108,7 +111,7 @@ const Functions = (props: any) => {
                     ref={gtRef}
                     onChange={handleChange}
                     placeholder='    
-{
+[{
     "label": "Navn",
     "value": "Navn Navnesen"
 },
@@ -119,7 +122,7 @@ const Functions = (props: any) => {
 {
     "label": "Telefon",
     "value": "+4794721323"
-}
+}]
                 '
                     
                 />
