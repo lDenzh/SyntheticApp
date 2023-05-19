@@ -35,6 +35,13 @@ const PDFevaluate = (props: any) => {
     }
   }
   
+  isLoading();
+  //Displays the first document when the page is loaded the first time*
+  useEffect(() => {
+  console.log("imma fetch doc nr: "+counter);
+  fetchData();
+  });
+  
   //Function that will get the json object from backend using a get method with axios where the id is equal to counter
   const fetchData = async () => { 
     try {
@@ -68,30 +75,31 @@ const PDFevaluate = (props: any) => {
     
  }
 
-isLoading();
-//Displays the first document when the page is loaded
-useEffect(() => {
-  console.log("imma fetch doc nr: "+counter);
-  fetchData();
-}, []);
+
 
 //Function that will get the next document to evaluate
 const nextDoc = () => {
   if (counter < 10){
     setCounter(counter+1)
+    fetchData();
+  } else {
+    console.log("no more docs to evaluate");
+    //props.onDisplayChange(false) change  this when we have a new docdownloadcomponent to display;
   }
-  fetchData();
 }
 //Function that will delete the current document and get the next document to evaluate
 const deleteDoc = async () => {
   const response = await axios.delete("http://localhost:8000/documents/"+props.onload()+"/"+counter);
   const data = await response.data;
   console.log(data);
-  console.log("imma delete doc nr: "+counter);
+  console.log("deleted doc nr: "+counter);
   if (counter < 10){
     setCounter(counter+1)
+    fetchData();
+  } else {
+    console.log("no more docs to evaluate");
+    //props.onDisplayChange(false) change  this when we have a new docdownloadcomponent to display;
   }
-  fetchData();
 }
 
 
@@ -104,19 +112,24 @@ let sampleGT:string = '[{\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  }
 async function downloadDocumentsAsZip(): Promise<void> {
   try {
     // Fetch all documents from the database using Axios
-    const response = await axios.get('http://localhost:8000/documents');
-
+    const response = await axios.get('http://localhost:8000/documents/'+props.onload());
+    console.log(response.data.message);
+    
     // Create a new JSZip instance
     const zip = new JSZip();
 
     // Add each document to the zip file
-    response.data.forEach((document: any) => {
+    response.data.message.forEach((item) => {
+      const { PDF, GT } = item; // Destructure the properties from the current item
+    
       // Decode the base64-encoded PDF to a Uint8Array
-      const pdfData = Uint8Array.from(atob(document.pdf), c => c.charCodeAt(0));
+      const pdfData = Uint8Array.from(atob(PDF.pdf), (c) => c.charCodeAt(0));
+    
       // Add the PDF to the zip file
       zip.file(`${document.id}.pdf`, pdfData);
+    
       // Add the JSON data to the zip file
-      zip.file(`${document.id}.json`, JSON.stringify(document.json));
+      zip.file(`${document.id}.json`, JSON.stringify(GT));
     });
 
     // Generate the zip file as a Blob
