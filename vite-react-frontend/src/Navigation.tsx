@@ -30,9 +30,6 @@ const Navigation = () => {
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar>
             <NavItem>
-              <NavLink href="/components/">Documents</NavLink>
-            </NavItem>
-            <NavItem>
               <NavLink href="https://www.cradl.ai/use-cases/invoice-ocr-api">Cradl.ai</NavLink>
             </NavItem>
             <NavItem>

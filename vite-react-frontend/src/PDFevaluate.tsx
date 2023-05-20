@@ -117,6 +117,8 @@ async function downloadDocumentsAsZip(): Promise<void> {
     const pairsOfData = Object.values(await response.data.message);
     console.log(pairsOfData);
     console.log(typeof pairsOfData);
+    console.log(Object.keys(pairsOfData))
+    console.log(pairsOfData[1])
     
     // Create a new JSZip instance
     const zip = new JSZip();
