@@ -65,6 +65,7 @@ const PDFevaluate = (props: any) => {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
+
       console.log(error.request);
     } else {
       // Something happened in setting up the request that triggered an Error
@@ -113,24 +114,27 @@ async function downloadDocumentsAsZip(): Promise<void> {
   try {
     // Fetch all documents from the database using Axios
     const response = await axios.get('http://localhost:8000/documents/'+props.onload());
-    console.log(response.data.message);
+    const pairsOfData = Object.values(await response.data.message);
+    console.log(pairsOfData);
+    console.log(typeof pairsOfData);
     
     // Create a new JSZip instance
     const zip = new JSZip();
 
     // Add each document to the zip file
-    response.data.message.forEach((item) => {
-      const { PDF, GT } = item; // Destructure the properties from the current item
-    
+    for (let pairKey of Object.keys(pairsOfData)) {
+      const pair = pairsOfData[pairKey];
+      var { PDF, GT } = pair // Destructure the properties from the current item
+      var jsonGT = GT;
       // Decode the base64-encoded PDF to a Uint8Array
-      const pdfData = Uint8Array.from(atob(PDF.pdf), (c) => c.charCodeAt(0));
+      const pdfData = Uint8Array.from(atob(PDF), (c) => c.charCodeAt(0));
     
       // Add the PDF to the zip file
-      zip.file(`${document.id}.pdf`, pdfData);
+      zip.file(`${pair}.pdf`, pdfData);
     
       // Add the JSON data to the zip file
-      zip.file(`${document.id}.json`, JSON.stringify(GT));
-    });
+      zip.file(`${pair}.json`, jsonGT);
+    };
 
     // Generate the zip file as a Blob
     const blob = await zip.generateAsync({ type: 'blob' });
