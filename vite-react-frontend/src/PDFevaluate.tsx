@@ -116,10 +116,6 @@ async function downloadDocumentsAsZip(): Promise<void> {
     // Fetch all documents from the database using Axios
     const response = await axios.get('http://localhost:8000/documents/'+orgID);
     const pairsOfData = Object.values(await response.data.message);
-    console.log(pairsOfData);
-    console.log(typeof pairsOfData);
-    console.log(Object.keys(pairsOfData))
-    console.log(pairsOfData[1])
     
     // Create a new JSZip instance
     const zip = new JSZip();
@@ -136,6 +132,7 @@ async function downloadDocumentsAsZip(): Promise<void> {
       zip.file(`DocID${orgID}nr${pairKey}.pdf`, pdfData); // Add the PDF to the zip file
     
       zip.file(`DocID${orgID}nr${pairKey}.json`, gtData); // Add the JSON data to the zip file
+      
     };
 
     // Generate the zip file as a Blob
@@ -143,6 +140,7 @@ async function downloadDocumentsAsZip(): Promise<void> {
 
     // Save the zip file to the user's computer using FileSaver.js
     FileSaver.saveAs(blob, `documents${orgID}.zip`);
+
   } catch (error) {
     console.error(error);
   }
@@ -152,7 +150,7 @@ const [loading, setLoading] = useState(true);
 
 function isLoading() {
   useEffect(() => {
-    const timoutID = setTimeout(() => setLoading(false), 3000);
+    const timoutID = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timoutID);
 }, []);
 }
