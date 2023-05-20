@@ -128,15 +128,14 @@ async function downloadDocumentsAsZip(): Promise<void> {
     for (let pairKey of Object.keys(pairsOfData)) {
       const pair = pairsOfData[pairKey];
       var { PDF, GT } = pair // Destructure the properties from the current item
-      var jsonGT = JSON.stringify(GT);
+
       // Decode the base64-encoded PDF to a Uint8Array
       const pdfData = Uint8Array.from(atob(PDF), (c) => c.charCodeAt(0));
+      const gtData = JSON.stringify(GT);
     
-      // Add the PDF to the zip file
-      zip.file(`orgID${orgID}nr${pairKey+1}.pdf`, pdfData); // Add the PDF to the zip file
+      zip.file(`DocID${orgID}nr${pairKey}.pdf`, pdfData); // Add the PDF to the zip file
     
-      // Add the JSON data to the zip file
-      zip.file(`orgID${orgID}nr${pairKey+1}.json`, jsonGT); // Add the JSON data to the zip file
+      zip.file(`DocID${orgID}nr${pairKey}.json`, gtData); // Add the JSON data to the zip file
     };
 
     // Generate the zip file as a Blob
