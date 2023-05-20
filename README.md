@@ -1,4 +1,4 @@
-# React-TS
+# SyntheticApp
 
 Requirments:
 
@@ -7,4 +7,4 @@ Requirments:
 
 
 Clone repo:
-$pip install "git+https://github.com/lDenzh/React-TS.git"
+$pip install "git+https://github.com/lDenzh/SyntheticApp.git"
