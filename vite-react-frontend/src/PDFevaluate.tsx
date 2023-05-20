@@ -21,6 +21,7 @@ const PDFevaluate = (props: any) => {
   const [pdf, setPdf] = useState("");
   const [gt, setGt] = useState("");
   const [counter, setCounter] = useState<number>(1);
+  var orgID = props.onload();
 
   interface BackendResponse {
     data: {
@@ -47,7 +48,7 @@ const PDFevaluate = (props: any) => {
     try {
       //get the json object from backend using a get method with axios where the id is equal to counter
       console.log("counter = "+counter);
-      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+props.onload()+"/"+counter);
+      let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+orgID+"/"+counter);
       
       var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
       setPdf(b64PDF); //set the pdf state to the pdf from the json object
@@ -90,7 +91,7 @@ const nextDoc = () => {
 }
 //Function that will delete the current document and get the next document to evaluate
 const deleteDoc = async () => {
-  const response = await axios.delete("http://localhost:8000/documents/"+props.onload()+"/"+counter);
+  const response = await axios.delete("http://localhost:8000/documents/"+orgID+"/"+counter);
   const data = await response.data;
   console.log(data);
   console.log("deleted doc nr: "+counter);
@@ -113,7 +114,7 @@ let sampleGT:string = '[{\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  }
 async function downloadDocumentsAsZip(): Promise<void> {
   try {
     // Fetch all documents from the database using Axios
-    const response = await axios.get('http://localhost:8000/documents/'+props.onload());
+    const response = await axios.get('http://localhost:8000/documents/'+orgID);
     const pairsOfData = Object.values(await response.data.message);
     console.log(pairsOfData);
     console.log(typeof pairsOfData);
@@ -127,22 +128,22 @@ async function downloadDocumentsAsZip(): Promise<void> {
     for (let pairKey of Object.keys(pairsOfData)) {
       const pair = pairsOfData[pairKey];
       var { PDF, GT } = pair // Destructure the properties from the current item
-      var jsonGT = GT;
+      var jsonGT = JSON.stringify(GT);
       // Decode the base64-encoded PDF to a Uint8Array
       const pdfData = Uint8Array.from(atob(PDF), (c) => c.charCodeAt(0));
     
       // Add the PDF to the zip file
-      zip.file(`${pair}.pdf`, pdfData);
+      zip.file(`orgID${orgID}nr${pairKey+1}.pdf`, pdfData); // Add the PDF to the zip file
     
       // Add the JSON data to the zip file
-      zip.file(`${pair}.json`, jsonGT);
+      zip.file(`orgID${orgID}nr${pairKey+1}.json`, jsonGT); // Add the JSON data to the zip file
     };
 
     // Generate the zip file as a Blob
     const blob = await zip.generateAsync({ type: 'blob' });
 
     // Save the zip file to the user's computer using FileSaver.js
-    FileSaver.saveAs(blob, 'documents.zip');
+    FileSaver.saveAs(blob, `documents${orgID}.zip`);
   } catch (error) {
     console.error(error);
   }
@@ -161,7 +162,7 @@ if (loading) {
   return <div className='spinner-container'><div className="lds-ripple"><div></div><div></div></div></div>;
 } else return (
 <div className='container'>
-  <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter}/10) of {props.onload()}</span></h4></div> 
+  <div className='heading'><h4>Verify the synthesized documents <span id='1'>({counter}/10) of {orgID}</span></h4></div> 
     <div className='row justify-content-center'>
       <div className='col-4'>
         <h5>Ground Truth JSON</h5>
