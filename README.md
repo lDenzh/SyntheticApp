@@ -7,11 +7,11 @@
 ```bash
 docker pull postgres
 ```
-Clone repo:
+Clone repository:
 ```bash
 git clone https://github.com/lDenzh/SyntheticApp
 ```
-Go to dir with the cloned repo and run:
+Go to directory with the cloned repository and run:
 ```bash
 docker-compose up --build
 ```
