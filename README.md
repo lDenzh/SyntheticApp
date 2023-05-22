@@ -13,5 +13,5 @@ git clone https://github.com/lDenzh/SyntheticApp
 ```
 Go to directory with the cloned repository and run:
 ```bash
-docker-compose up --build
+docker-compose up -d --build
 ```
