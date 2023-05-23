@@ -2,7 +2,7 @@
  
 ## Requirments:
 - Docker Engine & Docker Compose installed
-- Python 3.7+ installed
+- Python 3.8+ installed
 - Pull latest postgres image from docker:
 ```bash
 docker pull postgres
