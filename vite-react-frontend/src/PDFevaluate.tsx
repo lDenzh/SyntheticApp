@@ -39,15 +39,16 @@ const PDFevaluate = (props: any) => {
   isLoading();
   //Displays the first document when the page is loaded the first time*
   useEffect(() => {
-  console.log("imma fetch doc nr: "+counter);
-  fetchData();
-  });
+    console.log("inside useEffect , before fetchdata counter = "+counter);
+    fetchData();
+  }, []);
   
   //Function that will get the json object from backend using a get method with axios where the id is equal to counter
   const fetchData = async () => { 
+
     try {
+      console.log("inside fetchData , before fetchdata counter = "+counter);
       //get the json object from backend using a get method with axios where the id is equal to counter
-      console.log("counter = "+counter);
       let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+orgID+"/"+counter);
       
       var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
@@ -79,7 +80,8 @@ const PDFevaluate = (props: any) => {
 //Function that will get the next document to evaluate
 const nextDoc = () => {
   if (counter < 10){
-    setCounter(counter+1)
+    setCounter((counter) => counter + 1);
+    console.log("inside nextDoc, before fetchdata, counter = "+ counter);
     fetchData();
   } else {
     console.log("no more docs to evaluate");
@@ -93,7 +95,8 @@ const deleteDoc = async () => {
   console.log(data);
   console.log("deleted doc nr: "+counter);
   if (counter < 10){
-    setCounter(counter+1)
+    setCounter((currCount) => currCount + 1);
+    console.log("inside deleteDoc, before fetchdata counter = "+counter);
     fetchData();
   } else {
     console.log("no more docs to evaluate");
@@ -137,6 +140,8 @@ async function downloadDocumentsAsZip(): Promise<void> {
 
     // Save the zip file to the user's computer using FileSaver.js
     FileSaver.saveAs(blob, `documents${orgID}.zip`);
+    props.onChange(); //Increment docID counter in <App/>
+    props.onDisplayChange(false); //Change display to <Functions/>
 
   } catch (error) {
     console.error(error);
@@ -146,10 +151,8 @@ async function downloadDocumentsAsZip(): Promise<void> {
 const [loading, setLoading] = useState(true);
 
 function isLoading() {
-  useEffect(() => {
-    const timoutID = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timoutID);
-}, []);
+  const timoutID = setTimeout(() => setLoading(false), 2000);
+  return () => clearTimeout(timoutID);
 }
 
 if (loading) {

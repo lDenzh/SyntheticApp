@@ -32,6 +32,8 @@ const Functions = (props: any) => {
     });
 
     async function Postman() {
+        
+        let docID = props.onload(); //Get docID from <App/>
         let myPDF = await toBase64(file)
         let myArray = myPDF.split(",")
         let word = myArray[1];
@@ -42,8 +44,7 @@ const Functions = (props: any) => {
         };
         console.log(payload);
         
-        props.onChange(); //Increment docID counter in <App/>
-        let docID = props.onload(); //Get docID from <App/>
+        
         console.log("this.docID = "+docID);
 
         const { data } = await axios.post("http://localhost:8000/synthesizer/"+docID, payload, {  
@@ -52,11 +53,11 @@ const Functions = (props: any) => {
                 Accept: 'application/json'
               },
               
-        })
-      ;
-       
+        });
+
        console.log(JSON.stringify(data));
        props.onDisplayChange(true);
+       console.log("docID for next doc = "+docID);
     }
 
     const handleUpload = async() => {
