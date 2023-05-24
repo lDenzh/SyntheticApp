@@ -12,7 +12,6 @@ function App(props:any) {
 
   const handleId = () => {
     setIdCounter(idCounter + 1);
-    console.log("app.txs says id is = "+idCounter);
   };
 
   const getID = () => {
@@ -21,15 +20,18 @@ function App(props:any) {
   
   const handleDisplayChange = (value:any) => {
     setUploadSuccess(value);
+  
   };
 
 
   return (
     <Layout>
       {uploadSuccess ? (
-        <PDFevaluate onDisplayChange={handleDisplayChange} onload={getID}/>
+        <PDFevaluate onDisplayChange={handleDisplayChange}
+         onload={getID}/>
       ) : (
-        <Functions  onDisplayChange={handleDisplayChange} onload={getID} onChange={handleId} />
+        <Functions  onDisplayChange={handleDisplayChange}
+         onload={getID} onChange={handleId}/>
       )}
     </Layout>
   )

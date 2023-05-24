@@ -15,10 +15,6 @@ const Functions = (props: any) => {
     const [file, setFile] = useState<any | null>();
     const inputRef = useRef();
 
-    useEffect(() => {
-        props.onChange(); //call the handleId function from App.tsx and update docID to the current value of idCounter
-    }, []);
-
     const handleDrag = (e: React.DragEvent) => {
         e.preventDefault();
     };
@@ -45,11 +41,12 @@ const Functions = (props: any) => {
             GT: updated 
         };
         console.log(payload);
-
         
-        console.log("this.docID = "+props.onload());
+        props.onChange(); //Increment docID counter in <App/>
+        let docID = props.onload(); //Get docID from <App/>
+        console.log("this.docID = "+docID);
 
-        const { data } = await axios.post("http://localhost:8000/synthesizer/"+props.onload(), payload, {  
+        const { data } = await axios.post("http://localhost:8000/synthesizer/"+docID, payload, {  
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json'
