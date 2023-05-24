@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -30,7 +29,9 @@ const Navigation = () => {
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar>
             <NavItem>
-              <NavLink href="https://www.cradl.ai/use-cases/invoice-ocr-api">Cradl.ai</NavLink>
+              <NavLink href="https://www.cradl.ai/use-cases/invoice-ocr-api">
+                Cradl.ai
+              </NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="https://github.com/LucidtechAI/synthetic">

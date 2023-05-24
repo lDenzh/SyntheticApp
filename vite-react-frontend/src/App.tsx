@@ -18,7 +18,7 @@ function App(props:any) {
     return idCounter;
   }
   
-  const handleDisplayChange = (value:any) => {
+  const handleDisplayChange = (value:boolean) => {
     setUploadSuccess(value);
   
   };
