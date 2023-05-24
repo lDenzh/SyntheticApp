@@ -6,7 +6,7 @@ import Navigation from './Navigation'
         <Navigation/>
         {props.children}
         <hr/>
-        <p>© 2023 Robocar. No rights reserved</p>
+        <p>© 2023 Lucidtech.ai</p>
     </div>
   )
 }

@@ -74,10 +74,7 @@ const PDFevaluate = (props: any) => {
     }
     console.log(error.config);
   };
-    
  }
-
-
 
 //Function that will get the next document to evaluate
 const nextDoc = () => {
