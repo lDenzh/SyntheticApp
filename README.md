@@ -1,9 +1,11 @@
-### SyntheticApp
- 
-## Requirments:
+## SyntheticApp
+#### PS: Make sure to run on a trusted network if you're synthesizing sensitive information
+## Prerequisites:
 - Docker Engine & Docker Compose installed
 - Python 3.8+ installed
-- Pull latest postgres image from docker:
+
+### How to install and run:
+Pull latest postgres image from docker:
 ```bash
 docker pull postgres
 ```

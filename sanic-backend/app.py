@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import webbrowser
 from base64 import b64decode, b64encode
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -15,9 +16,10 @@ from synthetic.pdf.synthesizer import BasicSynthesizer
 
 
 app = Sanic(__name__)   # Create a Sanic app
+
 conn = None
 cursor = None
-
+#webbrowser.open("localhost:5173", new=2, autoraise=True)
 CORS_OPTIONS = {
     "resources": r'/*',
     "origins": "*",
@@ -158,9 +160,8 @@ def all_documents_org(request, orgId):
 def synthesize_document(
         pdf_path: Path, ground_truth: Path,
         dest_dir: Path, temp_dir: Path):
-
     status = parse_pdf(
-        name='pdf_test',
+        name='pdf_to_synthesize',
         pdf_file=pdf_path,
         json_file=ground_truth,
         synthesizer_class=BasicSynthesizer,
