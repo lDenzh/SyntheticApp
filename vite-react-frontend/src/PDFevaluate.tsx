@@ -37,9 +37,9 @@ const PDFevaluate = (props: any) => {
   }
   
   isLoading();
+
   //Displays the first document when the page is loaded the first time*
   useEffect(() => {
-    console.log("inside useEffect , before fetchdata counter = "+counter);
     fetchData();
   }, []);
   
@@ -47,12 +47,10 @@ const PDFevaluate = (props: any) => {
   const fetchData = async () => { 
 
     try {
-      console.log("inside fetchData , before fetchdata counter = "+counter);
       //get the json object from backend using a get method with axios where the id is equal to counter
       let response:BackendResponse = await axios.get("http://localhost:8000/documents/"+orgID+"/"+counter);
       
-      var b64PDF = response.data.message.PDF; //decode the pdf from double-encoded base64 to base64-string 
-      setPdf(b64PDF); //set the pdf state to the pdf from the json object
+      setPdf(response.data.message.PDF); //set the pdf state to the pdf from the json object
       setGt(JSON.stringify(response.data.message.GT));
       //set the pdf and gt state to the pdf and gt from the json object
       
@@ -93,14 +91,12 @@ const deleteDoc = async () => {
   const response = await axios.delete("http://localhost:8000/documents/"+orgID+"/"+counter);
   const data = await response.data;
   console.log(data);
-  console.log("deleted doc nr: "+counter);
+  console.log("Deleted Document nr: "+counter+" from database");
   if (counter < 10){
     setCounter((currCount) => currCount + 1);
-    console.log("inside deleteDoc, before fetchdata counter = "+counter);
     fetchData();
   } else {
     console.log("no more docs to evaluate");
-    //props.onDisplayChange(false) change  this when we have a new docdownloadcomponent to display;
   }
 }
 

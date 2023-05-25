@@ -35,17 +35,15 @@ const Functions = (props: any) => {
         
         let docID = props.onload(); //Get docID from <App/>
         let myPDF = await toBase64(file)
-        let myArray = myPDF.split(",")
-        let word = myArray[1];
+        let myArray = myPDF.split(",") //Split the base64 string into an array to separate the header from the base64 string
+        let base64PDF = myArray[1];
 
         const payload = {
-            PDF: word,
-            GT: updated 
+            PDF: base64PDF,
+            GT: updatedGT 
         };
-        console.log(payload);
-        
-        
-        console.log("this.docID = "+docID);
+        //console.log(payload);
+        //console.log("this.docID = "+docID);
 
         const { data } = await axios.post("http://localhost:8000/synthesizer/"+docID, payload, {  
             headers: {
@@ -54,10 +52,8 @@ const Functions = (props: any) => {
               },
               
         });
-
-       console.log(JSON.stringify(data));
-       props.onDisplayChange(true);
-       console.log("docID for next doc = "+docID);
+        
+        props.onDisplayChange(true);
     }
 
     const handleUpload = async() => {
@@ -66,14 +62,14 @@ const Functions = (props: any) => {
 
     const gtRef = useRef(null);
     const [gt, setGt] = useState('')
-    const [updated, setUpdated] = useState(gt)
+    const [updatedGT, setUpdatedGT] = useState(gt)
     
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setGt(e.target.value)
     }
 
     const handleGT = () => {
-        setUpdated(gt)
+        setUpdatedGT(gt)
         console.log(updated) //Shows the GT in console
     }
 
@@ -100,90 +96,97 @@ const Functions = (props: any) => {
 
     
 
-    if (file) return (
-      
-    <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
-      <div className="uploads">
-            <ul>
-                {Array.from(file).map((file, idx) => <li key={idx}>{file.name}</li> )}
-            </ul>
-            
-            <div className ="input-container">
-                <textarea 
-                    id="inputfield"
-                    ref={gtRef}
-                    onChange={handleChange}
-                    placeholder='    
-[{
-    "label": "Navn",
-    "value": "Navn Navnesen"
-},
-{
-    "label": "Totalsum",
-    "value": "528.00 kr"
-},
-{
-    "label": "Telefon",
-    "value": "+4794721323"
-}]
-                '
-                    
-                />
-            </div>
-                <Button color="danger" onClick={() => setFile(null)}>Cancel</Button>
-                <Button color="secondary" onClick={handleGT}>Confirm GT</Button>
-                <Button color="primary" id="hidden" style={{visibility: updated ? 'visible' : 'hidden'}}onClick={handleUpload}>Upload to server</Button>
-        </div>
-      <div style={{marginLeft: "60px"}}>
-        <Document
-            file={file[0]}
-            onLoadSuccess={onDocumentLoadSuccess}>
-          <Page pageNumber={pageNumber} renderTextLayer={false}/>
-        </Document>
-              <div>
-      <p>
-        Page {pageNumber || (numPages ? 1 : '--')} of {numPages || '--'}
-      </p>
-      <div className="btnprevnext">
-        <Button
-          disabled={pageNumber <= 1}
-          onClick={previousPage}
-        >
-          Previous
-        </Button>
-        <Button
-          disabled={pageNumber >= numPages}
-          onClick={nextPage}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-      </div>
-    </div>
-      
-  )
+    if (file)
     return (
-        <>
-            {!file && (
-            <div
-                className="dropzone"
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-            >
-                <h1>Drag and drop or select from file explorer to upload</h1>
-                <input
-                    type = 'file'
-                    accept= 'application/pdf'
-                    onChange={(event) => setFile(event.target.files)}
-                    hidden
-                    ref = {inputRef}
-                />
-                <Button color="primary" onClick = {() => inputRef.current.click()}>Choose file</Button>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <div className="uploads">
+          <ul>
+            {Array.from(file).map((file, idx) => (
+              <li key={idx}>{file.name}</li>
+            ))}
+          </ul>
+
+          <div className="input-container">
+            <textarea
+              id="inputfield"
+              ref={gtRef}
+              onChange={handleChange}
+              placeholder='    
+  [{
+      "label": "Navn",
+      "value": "Navn Navnesen"
+  },
+  {
+      "label": "Totalsum",
+      "value": "528.00 kr"
+  },
+  {
+      "label": "Telefon",
+      "value": "+4794721323"
+  }]
+                  '
+            />
+          </div>
+          <Button color="danger" onClick={() => setFile(null)}>
+            Cancel
+          </Button>
+          <Button color="secondary" onClick={handleGT}>
+            Confirm GT
+          </Button>
+          <Button
+            color="primary"
+            id="hidden"
+            style={{ visibility: updated ? "visible" : "hidden" }}
+            onClick={handleUpload}
+          >
+            Upload to server
+          </Button>
+        </div>
+        <div style={{ marginLeft: "60px" }}>
+          <Document file={file[0]} onLoadSuccess={onDocumentLoadSuccess}>
+            <Page pageNumber={pageNumber} renderTextLayer={false} />
+          </Document>
+          <div>
+            <p>
+              Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}
+            </p>
+            <div className="btnprevnext">
+              <Button disabled={pageNumber <= 1} onClick={previousPage}>
+                Previous
+              </Button>
+              <Button disabled={pageNumber >= numPages} onClick={nextPage}>
+                Next
+              </Button>
             </div>
-            )}
-        </>
-    )
+          </div>
+        </div>
+      </div>
+    );
+  else return (
+    <>
+      {!file && (
+        <div className="dropzone" onDragOver={handleDrag} onDrop={handleDrop}>
+          <h1>Drag and drop or select from file explorer to upload</h1>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(event) => setFile(event.target.files)}
+            hidden
+            ref={inputRef}
+          />
+          <Button color="primary" onClick={() => inputRef.current.click()}>
+            Choose file
+          </Button>
+        </div>
+      )}
+    </>
+  );
 }
 
 export default Functions;
