@@ -52,7 +52,7 @@ const Functions = (props: any) => {
               },
               
         });
-        
+
         props.onDisplayChange(true);
     }
 
@@ -142,7 +142,7 @@ const Functions = (props: any) => {
           <Button
             color="primary"
             id="hidden"
-            style={{ visibility: updated ? "visible" : "hidden" }}
+            style={{ visibility: updatedGT ? "visible" : "hidden" }}
             onClick={handleUpload}
           >
             Upload to server
