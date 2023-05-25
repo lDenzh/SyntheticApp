@@ -182,10 +182,6 @@ def create_statement(pdf_value, gt_value, org_id):
     }
 
 
-def sort_name(file_name):
-    return len(file_name.name)
-
-
 if __name__ == "__main__":
     try:
         app.run(host="0.0.0.0", port=8000, debug=True)
