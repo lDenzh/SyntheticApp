@@ -23,10 +23,8 @@ services:
     image: postgres:latest
     ports:
       - "5432:5432"
-
     env_file:
       - ./sanic-backend/database.env
-    
     networks:
       - network
       
