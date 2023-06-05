@@ -40,7 +40,7 @@ def run_synthsizer(request, orgId):
 
     global conn
     global cursor
-    if conn is None:
+    if not conn:
 
         conn = psycopg2.connect(
             database=os.environ["POSTGRES_DB"],
