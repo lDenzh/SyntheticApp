@@ -158,8 +158,10 @@ def all_documents_org(request, orgId):
 
 # Synthesizes the pdf and gt
 def synthesize_document(
-        pdf_path: Path, ground_truth: Path,
-        dest_dir: Path, temp_dir: Path):
+        pdf_path: Path,
+        ground_truth: Path,
+        dest_dir: Path, 
+        temp_dir: Path):
 
     status = parse_pdf(
         name='pdf_test',
@@ -182,9 +184,6 @@ def create_statement(pdf_value, gt_value, org_id):
         "orgID": org_id
     }
 
-
-def sort_name(file_name):
-    return len(file_name.name)
 
 
 if __name__ == "__main__":
