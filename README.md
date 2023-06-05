@@ -1,6 +1,6 @@
 # React-TS
 
-Requirments:
+Requirements:
 
 - Docker installed on your computer.
 - Pull latest postgres image from docker. Code: $docker pull postgres
