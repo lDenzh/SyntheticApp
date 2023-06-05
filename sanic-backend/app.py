@@ -119,8 +119,10 @@ def fetch_document(request, orgId, documentId):
 @app.route('/documents/<orgId>/<documentId>', methods=['DELETE'])
 @cors(allow_methods="DELETE")
 def delete_document(request, orgId, documentId):
-    cursor.execute("DELETE FROM synthesized WHERE id = %s AND orgId = %s;",
-                   (documentId, orgId))
+    cursor.execute(
+        "DELETE FROM synthesized WHERE id = %s AND orgId = %s;",
+        (documentId, orgId),
+    )
     return sanic_text("Deleted")
 
 
