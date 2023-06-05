@@ -147,9 +147,11 @@ def all_documents_org(request, orgId):
     data = cursor.fetchall()
     json_statment = {}
     for data_pair in data:
-        json_statment[data_pair[0]] = create_statement(data_pair[1],
-                                                       data_pair[2],
-                                                       data_pair[3])
+        json_statment[data_pair[0]] = create_statement(
+            data_pair[1],
+            data_pair[2],
+            data_pair[3],
+        )
 
     return sanic_json({"received": True, "message": json_statment})
 
