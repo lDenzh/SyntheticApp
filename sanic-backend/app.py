@@ -7,6 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import psycopg2
+import psycopg2.extras
 from sanic import Sanic
 from sanic.response import json as sanic_json, text as sanic_text
 from sanic_cors.extension import CORS
@@ -51,7 +52,7 @@ def run_synthsizer(request, orgId):
             port='5432',
             host='database'
         )
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         conn.autocommit = True
         cursor.execute('DROP TABLE IF EXISTS synthesized;')
 
@@ -106,8 +107,8 @@ def fetch_document(request, orgId, documentId):
     logging.info('Fetching document')
     cursor.execute('''SELECT * FROM synthesized
                    WHERE id = %s AND orgId = %s''', (documentId, orgId))
-    row = cursor.fetchone()
-    json_statement = create_statement(row[1], row[2], row[3])
+    ret_dict = cursor.fetchone()
+    json_statement = create_statement(ret_dict['pdf'], ret_dict['gt'], ret_dict['orgId'])
 
     return sanic_json({'received': True, 'message': json_statement})
 
@@ -131,9 +132,10 @@ def all_documents(request):
     data = cursor.fetchall()
     json_statment = {}
     for data_pair in data:
-        json_statment[data_pair[0]] = create_statement(data_pair[1],
-                                                       data_pair[2],
-                                                       data_pair[3])
+        json_statment[data_pair[0]] = create_statement(
+            data_pair[1],
+            data_pair[2],
+            data_pair[3])
 
     return sanic_json({'received': True, 'message': json_statment})
 
