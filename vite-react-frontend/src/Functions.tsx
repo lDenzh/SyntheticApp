@@ -50,7 +50,6 @@ const Functions = (props: any) => {
                 'Content-Type': 'application/json',
                 Accept: 'application/json'
               },
-              
         });
 
         props.onDisplayChange(true);
