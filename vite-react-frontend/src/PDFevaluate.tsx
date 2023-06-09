@@ -5,14 +5,9 @@ import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import mypdf from './assets/tempPdf.pdf'
 import './PDFevaluate.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-import Functions from './Functions';
 import { Button } from 'reactstrap';
-
 
 
 const PDFevaluate = (props: any) => {
@@ -21,6 +16,7 @@ const PDFevaluate = (props: any) => {
   const [pdf, setPdf] = useState("");
   const [gt, setGt] = useState("");
   const [counter, setCounter] = useState<number>(1);
+  const [showButton, setShowButton] = useState<boolean>(true);
   var orgID = props.onload();
 
   interface BackendResponse {
@@ -39,9 +35,8 @@ const PDFevaluate = (props: any) => {
   isLoading();
   //Displays the first document when the page is loaded the first time*
   useEffect(() => {
-  console.log("imma fetch doc nr: "+counter);
   fetchData();
-  });
+  }, []); // Second argument is an empty array so that it only runs once
   
   //Function that will get the json object from backend using a get method with axios where the id is equal to counter
   const fetchData = async () => { 
@@ -74,21 +69,19 @@ const PDFevaluate = (props: any) => {
     }
     console.log(error.config);
   };
-    
  }
-
-
 
 //Function that will get the next document to evaluate
 const nextDoc = () => {
   if (counter < 10){
-    setCounter(counter+1)
+    setCounter((counter) => counter + 1)
     fetchData();
   } else {
     console.log("no more docs to evaluate");
-    //props.onDisplayChange(false) change  this when we have a new docdownloadcomponent to display;
+    setShowButton(false);
   }
 }
+
 //Function that will delete the current document and get the next document to evaluate
 const deleteDoc = async () => {
   const response = await axios.delete("http://localhost:8000/documents/"+orgID+"/"+counter);
@@ -96,20 +89,16 @@ const deleteDoc = async () => {
   console.log(data);
   console.log("deleted doc nr: "+counter);
   if (counter < 10){
-    setCounter(counter+1)
+    setCounter((counter) => counter + 1)
     fetchData();
   } else {
     console.log("no more docs to evaluate");
-    //props.onDisplayChange(false) change  this when we have a new docdownloadcomponent to display;
   }
 }
-
 
 function onDocumentLoadSuccess({ numPages }) {
   setNumPages(numPages);
 }
-
-let sampleGT:string = '[{\n   "label": "Navn",\n   "value": "Navn Navnesen"\n  },\n  {\n   "label": "Totalsum",\n   "value": "528.00 kr"\n  },\n  {\n   "label": "Telefon",\n   "value": "+4794721323"\n  }\n]';
 
 async function downloadDocumentsAsZip(): Promise<void> {
   try {
