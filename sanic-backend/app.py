@@ -101,9 +101,9 @@ def run_synthsizer(request, documentId):
 
 
 # GET request to get the certain row from the database
-@app.route('/documents/<syntheticId>', methods=['GET'])
-@cors(allow_methods='GET')
-def fetch_document(request, documentId, syntheticId):
+# @app.route('/documents/<syntheticId>', methods=['GET'])
+# @cors(allow_methods='GET')
+# def fetch_document(request, documentId, syntheticId):
 
     logging.info('Fetching document')
     cursor.execute('''SELECT * FROM synthesized
@@ -117,7 +117,7 @@ def fetch_document(request, documentId, syntheticId):
                                      ret_dict['documentid']
                                      )
 
-    return sanic_json({'received': True, 'message': json_statement})
+    return sanic_json({'received': True, 'message': json_statement}) 
 
 
 # DELETE request that deletes the row with the given id
