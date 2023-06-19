@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  backend:
+    build: ./sanic-backend
+    container_name: sanic
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./sanic-backend/database.env
+    networks:
+      - network
+
+  frontend:
+    build: ./vite-react-frontend
+    container_name: reactapp
+    ports:
+      - "5173:5173"
+    networks:
+      - network
+  
+  database:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./sanic-backend/database.env
+    networks:
+      - network
+      
+networks:
+  network:
+    driver: bridge

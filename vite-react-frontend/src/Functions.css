@@ -1,0 +1,38 @@
+body {
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+
+}
+
+.input-container {
+    height: 650px;
+}
+  
+#inputfield {
+    width: 100%;
+    height: 95%;
+    color: black;
+    background-color: white;
+}  
+
+.dropzone {
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    border-style:dashed;
+    border-color: grey;
+    justify-content: center;
+    padding: 2%;
+}
+.dropzone Button {
+    margin-top: 5%;
+}
+
+#hidden {
+    visibility: hidden;
+}
+
+.btnprevnext {
+    display: flex;
+    column-gap: 12px;
+    justify-content:center;
+}
